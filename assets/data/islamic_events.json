@@ -1,0 +1,12 @@
+[
+  {"hijriMonth": 1, "hijriDay": 1, "nameBn": "ইসলামী নববর্ষ", "durationDays": 1},
+  {"hijriMonth": 1, "hijriDay": 10, "nameBn": "আশুরা", "durationDays": 1},
+  {"hijriMonth": 3, "hijriDay": 12, "nameBn": "ঈদে মিলাদুন্নবী (সা.)", "durationDays": 1},
+  {"hijriMonth": 7, "hijriDay": 27, "nameBn": "শবে মেরাজ", "durationDays": 1},
+  {"hijriMonth": 8, "hijriDay": 15, "nameBn": "শবে বরাত", "durationDays": 1},
+  {"hijriMonth": 9, "hijriDay": 1, "nameBn": "রমজান শুরু", "durationDays": 1},
+  {"hijriMonth": 9, "hijriDay": 27, "nameBn": "শবে কদর", "durationDays": 1},
+  {"hijriMonth": 10, "hijriDay": 1, "nameBn": "ঈদুল ফিতর", "durationDays": 1},
+  {"hijriMonth": 12, "hijriDay": 9, "nameBn": "আরাফাহ দিবস", "durationDays": 1},
+  {"hijriMonth": 12, "hijriDay": 10, "nameBn": "ঈদুল আজহা", "durationDays": 1}
+]

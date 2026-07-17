@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "arabic": "الرَّحْمٰنُ",
+    "name": "Ar-Rahman",
+    "meaning": "পরম দয়ালু",
+    "meaningEn": "The Most Gracious"
+  },
+  {
+    "id": 2,
+    "arabic": "الرَّحِيْمُ",
+    "name": "Ar-Rahim",
+    "meaning": "অতিশয় মেহেরবান",
+    "meaningEn": "The Most Merciful"
+  },
+  {
+    "id": 3,
+    "arabic": "الْمَلِكُ",
+    "name": "Al-Malik",
+    "meaning": "সর্বাধিপতি",
+    "meaningEn": "The King / The Sovereign"
+  },
+  {
+    "id": 4,
+    "arabic": "الْقُدُّوسُ",
+    "name": "Al-Quddus",
+    "meaning": "অতি পবিত্র",
+    "meaningEn": "The Most Sacred / The Most Holy"
+  },
+  {
+    "id": 5,
+    "arabic": "السَّلَامُ",
+    "name": "As-Salam",
+    "meaning": "শান্তির উৎস",
+    "meaningEn": "The Source of Peace"
+  },
+  {
+    "id": 6,
+    "arabic": "الْمُؤْمِنُ",
+    "name": "Al-Mu’min",
+    "meaning": "নিরাপত্তাদানকারী",
+    "meaningEn": "The Granter of Security"
+  },
+  {
+    "id": 7,
+    "arabic": "الْمُهَيْمِنُ",
+    "name": "Al-Muhaymin",
+    "meaning": "রক্ষাকারী",
+    "meaningEn": "The Guardian"
+  },
+  {
+    "id": 8,
+    "arabic": "الْعَزِيزُ",
+    "name": "Al-Aziz",
+    "meaning": "পরাক্রমশালী",
+    "meaningEn": "The Almighty / The Mighty"
+  },
+  {
+    "id": 9,
+    "arabic": "الْجَبَّارُ",
+    "name": "Al-Jabbar",
+    "meaning": "মহাপরাক্রমশালী",
+    "meaningEn": "The Compeller"
+  },
+  {
+    "id": 10,
+    "arabic": "الْمُتَكَبِّرُ",
+    "name": "Al-Mutakabbir",
+    "meaning": "অহংকারের একমাত্র অধিকারী",
+    "meaningEn": "The Supreme in Greatness"
+  },
+  {
+    "id": 11,
+    "arabic": "الْخَالِقُ",
+    "name": "Al-Khaliq",
+    "meaning": "সৃষ্টিকর্তা",
+    "meaningEn": "The Creator"
+  },
+  {
+    "id": 12,
+    "arabic": "الْبَارِئُ",
+    "name": "Al-Bari",
+    "meaning": "সঠিকভাবে সৃষ্টিকারী",
+    "meaningEn": "The Evolver / The Maker"
+  },
+  {
+    "id": 13,
+    "arabic": "الْمُصَوِّرُ",
+    "name": "Al-Musawwir",
+    "meaning": "আকৃতি দানকারী",
+    "meaningEn": "The Fashioner / The Shaper"
+  },
+  {
+    "id": 14,
+    "arabic": "الْغَفَّارُ",
+    "name": "Al-Ghaffar",
+    "meaning": "অত্যন্ত ক্ষমাশীল",
+    "meaningEn": "The Great Forgiver"
+  },
+  {
+    "id": 15,
+    "arabic": "الْقَهَّارُ",
+    "name": "Al-Qahhar",
+    "meaning": "প্রবল প্রতাপশালী",
+    "meaningEn": "The Subduer"
+  },
+  {
+    "id": 16,
+    "arabic": "الْوَهَّابُ",
+    "name": "Al-Wahhab",
+    "meaning": "দানশীল",
+    "meaningEn": "The Bestower"
+  },
+  {
+    "id": 17,
+    "arabic": "الرَّزَّاقُ",
+    "name": "Ar-Razzaq",
+    "meaning": "রিযিকদাতা",
+    "meaningEn": "The Provider"
+  },
+  {
+    "id": 18,
+    "arabic": "الْفَتَّاحُ",
+    "name": "Al-Fattah",
+    "meaning": "বিজয়দানকারী",
+    "meaningEn": "The Opener / The Judge"
+  },
+  {
+    "id": 19,
+    "arabic": "اَلْعَلِيْمُ",
+    "name": "Al-Alim",
+    "meaning": "সর্বজ্ঞ",
+    "meaningEn": "The All-Knowing"
+  },
+  {
+    "id": 20,
+    "arabic": "الْقَابِضُ",
+    "name": "Al-Qabid",
+    "meaning": "সংকোচনকারী",
+    "meaningEn": "The Constrictor"
+  },
+  {
+    "id": 21,
+    "arabic": "الْبَاسِطُ",
+    "name": "Al-Basit",
+    "meaning": "প্রসারকারী",
+    "meaningEn": "The Extender"
+  },
+  {
+    "id": 22,
+    "arabic": "الْخَافِضُ",
+    "name": "Al-Khafid",
+    "meaning": "অবনতকারী",
+    "meaningEn": "The Abaser"
+  },
+  {
+    "id": 23,
+    "arabic": "الرَّافِعُ",
+    "name": "Ar-Rafi",
+    "meaning": "উন্নতকারী",
+    "meaningEn": "The Exalter"
+  },
+  {
+    "id": 24,
+    "arabic": "الْمُعِزُّ",
+    "name": "Al-Muizz",
+    "meaning": "সম্মানদাতা",
+    "meaningEn": "The Bestower of Honor"
+  },
+  {
+    "id": 25,
+    "arabic": "المُذِلُّ",
+    "name": "Al-Muzill",
+    "meaning": "অপমানকারী",
+    "meaningEn": "The Humiliator"
+  },
+  {
+    "id": 26,
+    "arabic": "السَّمِيعُ",
+    "name": "As-Sami",
+    "meaning": "সর্বশ্রোতা",
+    "meaningEn": "The All-Hearing"
+  },
+  {
+    "id": 27,
+    "arabic": "الْبَصِيرُ",
+    "name": "Al-Basir",
+    "meaning": "সর্বদ্রষ্টা",
+    "meaningEn": "The All-Seeing"
+  },
+  {
+    "id": 28,
+    "arabic": "الْحَكَمُ",
+    "name": "Al-Hakam",
+    "meaning": "বিচারক",
+    "meaningEn": "The Judge"
+  },
+  {
+    "id": 29,
+    "arabic": "الْعَدْلُ",
+    "name": "Al-Adl",
+    "meaning": "ন্যায়পরায়ণ",
+    "meaningEn": "The Utterly Just"
+  },
+  {
+    "id": 30,
+    "arabic": "اللَّطِيفُ",
+    "name": "Al-Latif",
+    "meaning": "সুকৌশলী",
+    "meaningEn": "The Subtle / The Most Gentle"
+  },
+  {
+    "id": 31,
+    "arabic": "الْخَبِيرُ",
+    "name": "Al-Khabir",
+    "meaning": "সর্বজ্ঞাত",
+    "meaningEn": "The All-Aware"
+  },
+  {
+    "id": 32,
+    "arabic": "الْحَلِيمُ",
+    "name": "Al-Halim",
+    "meaning": "অত্যন্ত সহনশীল",
+    "meaningEn": "The Forbearing"
+  },
+  {
+    "id": 33,
+    "arabic": "الْعَظِيمُ",
+    "name": "Al-Azim",
+    "meaning": "মহান",
+    "meaningEn": "The Magnificent"
+  },
+  {
+    "id": 34,
+    "arabic": "الْغَفُورُ",
+    "name": "Al-Ghafur",
+    "meaning": "পরম ক্ষমাশীল",
+    "meaningEn": "The Great Forgiver"
+  },
+  {
+    "id": 35,
+    "arabic": "الشَّكُورُ",
+    "name": "Ash-Shakur",
+    "meaning": "গুণগ্রাহী",
+    "meaningEn": "The Most Appreciative"
+  },
+  {
+    "id": 36,
+    "arabic": "الْعَلِيُّ",
+    "name": "Al-Aliyy",
+    "meaning": "সর্বোচ্চ",
+    "meaningEn": "The Most High"
+  },
+  {
+    "id": 37,
+    "arabic": "الْكَبِيرُ",
+    "name": "Al-Kabir",
+    "meaning": "সুমহান",
+    "meaningEn": "The Most Great"
+  },
+  {
+    "id": 38,
+    "arabic": "الْحَفِيظُ",
+    "name": "Al-Hafiz",
+    "meaning": "সংরক্ষণকারী",
+    "meaningEn": "The Preserver"
+  },
+  {
+    "id": 39,
+    "arabic": "المُقيِت",
+    "name": "Al-Muqit",
+    "meaning": "খাদ্যদানকারী",
+    "meaningEn": "The Sustainer"
+  },
+  {
+    "id": 40,
+    "arabic": "الْحسِيبُ",
+    "name": "Al-Hasib",
+    "meaning": "হিসাব গ্রহণকারী",
+    "meaningEn": "The Reckoner"
+  },
+  {
+    "id": 41,
+    "arabic": "الْجَلِيلُ",
+    "name": "Al-Jalil",
+    "meaning": "মহিমান্বিত",
+    "meaningEn": "The Majestic"
+  },
+  {
+    "id": 42,
+    "arabic": "الْكَرِيمُ",
+    "name": "Al-Karim",
+    "meaning": "অত্যন্ত দানশীল",
+    "meaningEn": "The Most Generous"
+  },
+  {
+    "id": 43,
+    "arabic": "الرَّقِيبُ",
+    "name": "Ar-Raqib",
+    "meaning": "তত্ত্বাবধায়ক",
+    "meaningEn": "The Watchful"
+  },
+  {
+    "id": 44,
+    "arabic": "الْمُجِيبُ",
+    "name": "Al-Mujib",
+    "meaning": "দোয়া কবুলকারী",
+    "meaningEn": "The Responsive"
+  },
+  {
+    "id": 45,
+    "arabic": "الْوَاسِعُ",
+    "name": "Al-Wasi",
+    "meaning": "সর্বব্যাপী",
+    "meaningEn": "The All-Encompassing"
+  },
+  {
+    "id": 46,
+    "arabic": "الْحَكِيمُ",
+    "name": "Al-Hakim",
+    "meaning": "প্রজ্ঞাময়",
+    "meaningEn": "The All-Wise"
+  },
+  {
+    "id": 47,
+    "arabic": "الْوَدُودُ",
+    "name": "Al-Wadud",
+    "meaning": "পরম স্নেহশীল",
+    "meaningEn": "The Most Loving"
+  },
+  {
+    "id": 48,
+    "arabic": "الْمَجِيدُ",
+    "name": "Al-Majid",
+    "meaning": "মহিমান্বিত",
+    "meaningEn": "The Glorious"
+  },
+  {
+    "id": 49,
+    "arabic": "الْبَاعِثُ",
+    "name": "Al-Ba’ith",
+    "meaning": "পুনরুত্থানকারী",
+    "meaningEn": "The Resurrector"
+  },
+  {
+    "id": 50,
+    "arabic": "الشَّهِيدُ",
+    "name": "Ash-Shahid",
+    "meaning": "সর্বজ্ঞ সাক্ষী",
+    "meaningEn": "The Witness"
+  }
+]

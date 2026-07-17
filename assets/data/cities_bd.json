@@ -1,0 +1,398 @@
+[
+  {
+    "key": "Bagerhat",
+    "name_bn": "বাগেরহাট",
+    "lat": 22.6565,
+    "lon": 89.7891
+  },
+  {
+    "key": "Bandarban",
+    "name_bn": "বান্দরবান",
+    "lat": 22.2,
+    "lon": 92.2167
+  },
+  {
+    "key": "Barguna",
+    "name_bn": "বরগুনা",
+    "lat": 22.095,
+    "lon": 90.1118
+  },
+  {
+    "key": "Barisal",
+    "name_bn": "বরিশাল",
+    "lat": 22.701,
+    "lon": 90.3535
+  },
+  {
+    "key": "Bhairab",
+    "name_bn": "ভৈরব",
+    "lat": 24.0583,
+    "lon": 90.9997
+  },
+  {
+    "key": "Bhola",
+    "name_bn": "ভোলা",
+    "lat": 22.686,
+    "lon": 90.643
+  },
+  {
+    "key": "Bogra",
+    "name_bn": "বগুড়া",
+    "lat": 24.8465,
+    "lon": 89.3776
+  },
+  {
+    "key": "Brahmanbaria",
+    "name_bn": "ব্রাহ্মণবাড়িয়া",
+    "lat": 23.9605,
+    "lon": 91.1121
+  },
+  {
+    "key": "Chandpur",
+    "name_bn": "চাঁদপুর",
+    "lat": 23.2325,
+    "lon": 90.6425
+  },
+  {
+    "key": "Chapai Nawabganj",
+    "name_bn": "চাঁপাইনবাবগঞ্জ",
+    "lat": 24.5975,
+    "lon": 88.2938
+  },
+  {
+    "key": "Chittagong",
+    "name_bn": "চট্টগ্রাম",
+    "lat": 22.3569,
+    "lon": 91.7832
+  },
+  {
+    "key": "Chuadanga",
+    "name_bn": "চুয়াডাঙ্গা",
+    "lat": 23.6423,
+    "lon": 88.8524
+  },
+  {
+    "key": "Comilla",
+    "name_bn": "কুমিল্লা",
+    "lat": 23.4682,
+    "lon": 91.1809
+  },
+  {
+    "key": "Dhaka",
+    "name_bn": "ঢাকা",
+    "lat": 23.8103,
+    "lon": 90.4125
+  },
+  {
+    "key": "Dinajpur",
+    "name_bn": "দিনাজপুর",
+    "lat": 25.6264,
+    "lon": 88.6385
+  },
+  {
+    "key": "Faridpur",
+    "name_bn": "ফরিদপুর",
+    "lat": 23.6071,
+    "lon": 89.8402
+  },
+  {
+    "key": "Feni",
+    "name_bn": "ফেনী",
+    "lat": 23.0298,
+    "lon": 91.3975
+  },
+  {
+    "key": "Gaibandha",
+    "name_bn": "গাইবান্ধা",
+    "lat": 25.3268,
+    "lon": 89.5434
+  },
+  {
+    "key": "Gazipur",
+    "name_bn": "গাজীপুর",
+    "lat": 24.0022,
+    "lon": 90.4293
+  },
+  {
+    "key": "Gopalganj",
+    "name_bn": "গোপালগঞ্জ",
+    "lat": 23.0031,
+    "lon": 89.8242
+  },
+  {
+    "key": "Hobiganj",
+    "name_bn": "হবিগঞ্জ",
+    "lat": 24.38,
+    "lon": 91.4116
+  },
+  {
+    "key": "Jamalpur",
+    "name_bn": "জামালপুর",
+    "lat": 24.9167,
+    "lon": 89.9333
+  },
+  {
+    "key": "Jessore",
+    "name_bn": "যশোর",
+    "lat": 23.1667,
+    "lon": 89.2
+  },
+  {
+    "key": "Jhalokati",
+    "name_bn": "ঝালকাঠি",
+    "lat": 22.6377,
+    "lon": 90.2079
+  },
+  {
+    "key": "Jhenaidah",
+    "name_bn": "ঝিনাইদহ",
+    "lat": 23.5458,
+    "lon": 89.176
+  },
+  {
+    "key": "Joypurhat",
+    "name_bn": "জয়পুরহাট",
+    "lat": 25.0933,
+    "lon": 89.0944
+  },
+  {
+    "key": "Khagrachhari",
+    "name_bn": "খাগড়াছড়ি",
+    "lat": 23.0085,
+    "lon": 101.9961
+  },
+  {
+    "key": "Khulna",
+    "name_bn": "খুলনা",
+    "lat": 22.8456,
+    "lon": 89.5403
+  },
+  {
+    "key": "Kishoreganj",
+    "name_bn": "কিশোরগঞ্জ",
+    "lat": 24.4333,
+    "lon": 90.775
+  },
+  {
+    "key": "Kurigram",
+    "name_bn": "কুড়িগ্রাম",
+    "lat": 25.8072,
+    "lon": 89.6733
+  },
+  {
+    "key": "Kushtia",
+    "name_bn": "কুষ্টিয়া",
+    "lat": 23.9088,
+    "lon": 89.119
+  },
+  {
+    "key": "Lakshmipur",
+    "name_bn": "লক্ষ্মীপুর",
+    "lat": 22.9463,
+    "lon": 90.8437
+  },
+  {
+    "key": "Lalmonirhat",
+    "name_bn": "লালমনিরহাট",
+    "lat": 25.9554,
+    "lon": 89.2789
+  },
+  {
+    "key": "Madaripur",
+    "name_bn": "মাদারীপুর",
+    "lat": 23.2104,
+    "lon": 90.1872
+  },
+  {
+    "key": "Magura",
+    "name_bn": "মাগুরা",
+    "lat": 23.4251,
+    "lon": 89.4202
+  },
+  {
+    "key": "Manikganj",
+    "name_bn": "মানিকগঞ্জ",
+    "lat": 23.8622,
+    "lon": 89.9881
+  },
+  {
+    "key": "Medina",
+    "name_bn": "মদিনা",
+    "lat": 24.4686,
+    "lon": 39.6142
+  },
+  {
+    "key": "Meherpur",
+    "name_bn": "মেহেরপুর",
+    "lat": 23.7788,
+    "lon": 88.6652
+  },
+  {
+    "key": "Moulvibazar",
+    "name_bn": "মৌলভীবাজার",
+    "lat": 24.45,
+    "lon": 91.75
+  },
+  {
+    "key": "Munshiganj",
+    "name_bn": "মুন্সীগঞ্জ",
+    "lat": 23.5412,
+    "lon": 90.5305
+  },
+  {
+    "key": "Mymensingh",
+    "name_bn": "ময়মনসিংহ",
+    "lat": 24.7471,
+    "lon": 90.4203
+  },
+  {
+    "key": "Naogaon",
+    "name_bn": "নওগাঁ",
+    "lat": 24.7936,
+    "lon": 88.9412
+  },
+  {
+    "key": "Narail",
+    "name_bn": "নড়াইল",
+    "lat": 23.1167,
+    "lon": 89.8
+  },
+  {
+    "key": "Narayanganj",
+    "name_bn": "নারায়ণগঞ্জ",
+    "lat": 23.6333,
+    "lon": 90.5
+  },
+  {
+    "key": "Natore",
+    "name_bn": "নাটোর",
+    "lat": 24.4172,
+    "lon": 89.0
+  },
+  {
+    "key": "Netrokona",
+    "name_bn": "নেত্রকোনা",
+    "lat": 24.8967,
+    "lon": 90.7233
+  },
+  {
+    "key": "Nilphamari",
+    "name_bn": "নীলফামারী",
+    "lat": 25.9333,
+    "lon": 88.8833
+  },
+  {
+    "key": "Noakhali",
+    "name_bn": "নোয়াখালী",
+    "lat": 22.855,
+    "lon": 91.1042
+  },
+  {
+    "key": "Pabna",
+    "name_bn": "পাবনা",
+    "lat": 24.0152,
+    "lon": 89.253
+  },
+  {
+    "key": "Panchagarh",
+    "name_bn": "পঞ্চগড়",
+    "lat": 26.3134,
+    "lon": 88.5952
+  },
+  {
+    "key": "Patuakhali",
+    "name_bn": "পটুয়াখালী",
+    "lat": 22.3557,
+    "lon": 90.3225
+  },
+  {
+    "key": "Pirojpur",
+    "name_bn": "পিরোজপুর",
+    "lat": 22.5833,
+    "lon": 89.9667
+  },
+  {
+    "key": "Rajbari",
+    "name_bn": "রাজবাড়ী",
+    "lat": 23.75,
+    "lon": 89.65
+  },
+  {
+    "key": "Rajshahi",
+    "name_bn": "রাজশাহী",
+    "lat": 24.3745,
+    "lon": 88.6042
+  },
+  {
+    "key": "Rangamati",
+    "name_bn": "রাঙ্গামাটি",
+    "lat": 22.656,
+    "lon": 92.1793
+  },
+  {
+    "key": "Rangpur",
+    "name_bn": "রংপুর",
+    "lat": 25.746,
+    "lon": 89.25
+  },
+  {
+    "key": "Satkhira",
+    "name_bn": "সাতক্ষীরা",
+    "lat": 22.7233,
+    "lon": 89.0707
+  },
+  {
+    "key": "Shariatpur",
+    "name_bn": "শরীয়তপুর",
+    "lat": 23.2081,
+    "lon": 90.3478
+  },
+  {
+    "key": "Sherpur",
+    "name_bn": "শেরপুর",
+    "lat": 25.0167,
+    "lon": 90.0167
+  },
+  {
+    "key": "Sirajganj",
+    "name_bn": "সিরাজগঞ্জ",
+    "lat": 24.4712,
+    "lon": 89.7003
+  },
+  {
+    "key": "Sunamganj",
+    "name_bn": "সুনামগঞ্জ",
+    "lat": 25.0683,
+    "lon": 91.3958
+  },
+  {
+    "key": "Sylhet",
+    "name_bn": "সিলেট",
+    "lat": 24.8949,
+    "lon": 91.8687
+  },
+  {
+    "key": "Tangail",
+    "name_bn": "টাঙ্গাইল",
+    "lat": 26.1361,
+    "lon": 90.0096
+  },
+  {
+    "key": "Thakurgaon",
+    "name_bn": "ঠাকুরগাঁও",
+    "lat": 26.0354,
+    "lon": 88.4616
+  },
+  {
+    "key": "makka",
+    "name_bn": "মক্কা",
+    "lat": 21.4225,
+    "lon": 39.8262
+  },
+  {
+    "key": "s Bazar",
+    "name_bn": "কক্সবাজার",
+    "lat": 21.4271,
+    "lon": 91.9798
+  }
+]

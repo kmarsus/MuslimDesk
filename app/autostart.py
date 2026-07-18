@@ -1,6 +1,6 @@
 """Registers MuslimDesk to launch automatically at Windows sign-in (HKCU Run
 key) and, for the packaged exe, a proper "Apps & Features" uninstall entry
-plus a Start Menu shortcut -- all per-user, no admin rights needed."""
+plus Start Menu / Desktop shortcuts -- all per-user, no admin rights needed."""
 from __future__ import annotations
 
 import sys
@@ -8,7 +8,7 @@ import winreg
 from pathlib import Path
 
 APP_NAME = "MuslimDesk"
-APP_VERSION = "1.0.1"
+APP_VERSION = "1.0.2"
 _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 _UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\MuslimDesk"
 
@@ -37,11 +37,15 @@ def _start_menu_shortcut_path() -> Path:
     return Path(os.environ["APPDATA"]) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "MuslimDesk.lnk"
 
 
-def _create_start_menu_shortcut(exe_path: Path) -> None:
+def _desktop_shortcut_path() -> Path:
+    import os
+    return Path(os.environ["USERPROFILE"]) / "Desktop" / "MuslimDesk.lnk"
+
+
+def _create_shortcut(shortcut_path: Path, exe_path: Path) -> None:
     try:
         import win32com.client
         shell = win32com.client.Dispatch("WScript.Shell")
-        shortcut_path = _start_menu_shortcut_path()
         shortcut_path.parent.mkdir(parents=True, exist_ok=True)
         shortcut = shell.CreateShortCut(str(shortcut_path))
         shortcut.TargetPath = str(exe_path)
@@ -52,11 +56,12 @@ def _create_start_menu_shortcut(exe_path: Path) -> None:
         pass
 
 
-def _remove_start_menu_shortcut() -> None:
-    try:
-        _start_menu_shortcut_path().unlink(missing_ok=True)
-    except OSError:
-        pass
+def _remove_shortcuts() -> None:
+    for path in (_start_menu_shortcut_path(), _desktop_shortcut_path()):
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def ensure_uninstall_entry_registered() -> None:
@@ -67,7 +72,8 @@ def ensure_uninstall_entry_registered() -> None:
         return
     exe_path = Path(sys.executable)
     try:
-        _create_start_menu_shortcut(exe_path)
+        _create_shortcut(_start_menu_shortcut_path(), exe_path)
+        _create_shortcut(_desktop_shortcut_path(), exe_path)
         with winreg.CreateKey(winreg.HKEY_CURRENT_USER, _UNINSTALL_KEY) as key:
             winreg.SetValueEx(key, "DisplayName", 0, winreg.REG_SZ, APP_NAME)
             winreg.SetValueEx(key, "DisplayVersion", 0, winreg.REG_SZ, APP_VERSION)
@@ -98,4 +104,4 @@ def remove_windows_integration() -> None:
         winreg.DeleteKey(winreg.HKEY_CURRENT_USER, _UNINSTALL_KEY)
     except OSError:
         pass
-    _remove_start_menu_shortcut()
+    _remove_shortcuts()

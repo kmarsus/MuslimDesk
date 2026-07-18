@@ -11,9 +11,9 @@ Think of it as a Windows equivalent to popular mobile Muslim/Azan apps (like Mus
 
 ## Download
 
-**[⬇ Download MuslimDesk.exe (v1.0.1)](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.1/MuslimDesk.exe)** — standalone, no installation required, no Python needed.
+**[⬇ Download MuslimDesk.exe (v1.0.2)](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.2/MuslimDesk.exe)** — standalone, no installation required, no Python needed.
 
-Release notes: [v1.0.1](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.1)
+Release notes: [v1.0.2](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.2)
 
 ## Screenshots
 
@@ -63,11 +63,11 @@ Release notes: [v1.0.1](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.
 
 ## Installation & Usage
 
-1. [Download `MuslimDesk.exe`](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.1/MuslimDesk.exe) — it's a single portable file, no installer needed.
+1. [Download `MuslimDesk.exe`](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.2/MuslimDesk.exe) — it's a single portable file, no installer needed.
 2. Double-click to run it. Windows SmartScreen may warn about an unrecognized publisher (this is expected for an unsigned open-source app) — click **More info → Run anyway**.
 3. On first launch, open **Settings** to set your location (country/city or manual coordinates), calculation method, madhab, azan voice, and language (Bengali/English).
 4. The app minimizes to the system tray and keeps running in the background so it can play the Azan and any alarms at the right time — click the tray icon to reopen the window.
-5. MuslimDesk registers itself to start automatically with Windows and adds a proper entry to **Settings → Apps → Installed apps** (per-user, no admin rights needed — it doesn't move or copy the exe anywhere). **To uninstall:** open Settings → Apps → Installed apps, find MuslimDesk, and click Uninstall — this stops the auto-start and removes the Start Menu shortcut. Then just delete `MuslimDesk.exe` itself.
+5. MuslimDesk registers itself to start automatically with Windows and adds a proper entry to **Settings → Apps → Installed apps**, plus a Start Menu and Desktop shortcut (per-user, no admin rights needed — it doesn't move or copy the exe anywhere). **To uninstall:** open Settings → Apps → Installed apps, find MuslimDesk, and click Uninstall — this stops the auto-start and removes both shortcuts. Then just delete `MuslimDesk.exe` itself.
 
 ## Running from source
 

@@ -13,6 +13,37 @@ Think of it as a Windows equivalent to popular mobile Muslim/Azan apps (like Mus
 
 Get the latest **standalone `MuslimDesk.exe`** (no installation required — just download and run) from the [**Releases**](https://github.com/kmarsus/MuslimDesk/releases) page. No Python installation needed.
 
+## Screenshots
+
+<table>
+<tr>
+<td width="33%"><img src="docs/screenshots/01_home.png" alt="MuslimDesk Windows app Home screen showing today's prayer times and Hijri date"><p align="center"><b>Home</b> — today's prayer times &amp; Hijri date</p></td>
+<td width="33%"><img src="docs/screenshots/02_prayer_times.png" alt="MuslimDesk offline prayer times (Salah/Namaz) screen for Windows"><p align="center"><b>Prayer Times</b> — offline calculation</p></td>
+<td width="33%"><img src="docs/screenshots/03_daily_azkar.png" alt="MuslimDesk Daily Azkar and Tibbe Nabawi ruqyah screen"><p align="center"><b>Daily Azkar</b> — Hefazoter Amol &amp; Tibbe Nabawi</p></td>
+</tr>
+<tr>
+<td width="33%"><img src="docs/screenshots/06_quran.png" alt="MuslimDesk offline Al-Quran reader for Windows with Arabic text and translation"><p align="center"><b>Al-Qur'an</b> — offline reader with translation &amp; recitation</p></td>
+<td width="33%"><img src="docs/screenshots/07_hijri_calendar.png" alt="MuslimDesk Hijri Islamic calendar with Ayyam al-Bidh fasting days marked"><p align="center"><b>Hijri Calendar</b> — Islamic events &amp; fasting days</p></td>
+<td width="33%"><img src="docs/screenshots/08_qibla.png" alt="MuslimDesk Qibla direction compass for Windows"><p align="center"><b>Qibla Direction</b> — compass finder</p></td>
+</tr>
+<tr>
+<td width="33%"><img src="docs/screenshots/09_nearby_mosques.png" alt="MuslimDesk nearby mosque finder screen"><p align="center"><b>Nearby Mosques</b> — find mosques near you</p></td>
+<td width="33%"><img src="docs/screenshots/10_tasbih.png" alt="MuslimDesk multi-target Tasbih dhikr counter"><p align="center"><b>Tasbih Counter</b> — multi-target dhikr counter</p></td>
+<td width="33%"><img src="docs/screenshots/12_settings.png" alt="MuslimDesk settings screen with language, azan voice, and location options"><p align="center"><b>Settings</b> — language, azan voice &amp; location</p></td>
+</tr>
+</table>
+
+<details>
+<summary>More screenshots (Dua &amp; Hadith, Asmaul Husna, Alarm Clock, About)</summary>
+<table>
+<tr>
+<td width="33%"><img src="docs/screenshots/04_dua.png" alt="MuslimDesk Dua and Hadith offline screen"><p align="center"><b>Dua &amp; Hadith</b></p></td>
+<td width="33%"><img src="docs/screenshots/05_asmaul_husna.png" alt="MuslimDesk 99 Names of Allah Asmaul Husna screen"><p align="center"><b>Asmaul Husna</b> — the 99 Names</p></td>
+<td width="33%"><img src="docs/screenshots/11_alarm.png" alt="MuslimDesk alarm clock screen for Windows"><p align="center"><b>Alarm Clock</b></p></td>
+</tr>
+</table>
+</details>
+
 ## Features
 
 - **Prayer times** — offline astronomical calculation (12 calculation methods, Hanafi/Shafi madhab), manual per-prayer time adjustment, country → city picker (offline, 244 countries) or manual lat/lon.

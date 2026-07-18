@@ -224,7 +224,7 @@ class Settings:
 
     @property
     def voice_clock_enabled(self) -> bool:
-        return self._get("voice_clock_enabled", False)
+        return self._get("voice_clock_enabled", True)
 
     @voice_clock_enabled.setter
     def voice_clock_enabled(self, v: bool) -> None:
@@ -249,7 +249,7 @@ class Settings:
 
     @property
     def show_speed_tray(self) -> bool:
-        return self._get("show_speed_tray", False)
+        return self._get("show_speed_tray", True)
 
     @show_speed_tray.setter
     def show_speed_tray(self, v: bool) -> None:

@@ -188,7 +188,7 @@ _STRINGS: dict[str, dict[str, str]] = {
     "azan_playing_title": {"en": "Azan", "bn": "আজান"},
     "azan_reminder_text": {
         "en": "The Azan is being called. Pause your work, respond to the Mu'adhdhin, and prepare for Salah.",
-        "bn": "আজান দেওয়া হচ্ছে। আপনার কাজ থামান, মুয়াজ্জিনের জবাব দিন এবং সালাতের জন্য প্রস্তুত হোন।",
+        "bn": "আজান হচ্ছে। অনুগ্রহ করে কাজ থামিয়ে মুয়াজ্জিনের জবাব দিন এবং সালাতের প্রস্তুতি নিন। আজান শেষ হলে সব কাজের চেয়ে সালাতকে প্রাধান্য দেওয়াই একজন মুমিনের কর্তব্য।",
     },
     "azan_hadith_text": {
         "en": "On the Day of Judgment, Allah will first take account of prayer. If the prayer is sound, "

@@ -174,6 +174,17 @@ class TasbihView(QWidget):
             self._pick_current()
         self._refresh()
 
+    def _move_target(self, target: TasbihTarget, offset: int) -> None:
+        i = next((idx for idx, t in enumerate(self._targets) if t.id == target.id), None)
+        if i is None:
+            return
+        j = i + offset
+        if not (0 <= j < len(self._targets)):
+            return
+        self._targets[i], self._targets[j] = self._targets[j], self._targets[i]
+        self._save()
+        self._refresh()
+
     # ── rendering ─────────────────────────────────────────────────────
     def _refresh(self) -> None:
         current = self._current_target()
@@ -197,12 +208,32 @@ class TasbihView(QWidget):
                 w.setParent(None)
                 w.deleteLater()
 
-        for t in self._targets:
+        for idx, t in enumerate(self._targets):
             card = Card(margins=12, spacing=6)
             if t.completed:
                 card.setStyleSheet(f"#Card {{ background-color: {_DONE_BG}; }}")
 
             top_row = QHBoxLayout()
+
+            move_col = QVBoxLayout()
+            move_col.setSpacing(2)
+            _move_btn_style = "padding: 0px; font-size: 11px;"
+            up_btn = QPushButton("▲")
+            up_btn.setObjectName("Ghost")
+            up_btn.setFixedSize(28, 22)
+            up_btn.setStyleSheet(_move_btn_style)
+            up_btn.setEnabled(idx > 0)
+            up_btn.clicked.connect(lambda _=False, tt=t: self._move_target(tt, -1))
+            down_btn = QPushButton("▼")
+            down_btn.setObjectName("Ghost")
+            down_btn.setFixedSize(28, 22)
+            down_btn.setStyleSheet(_move_btn_style)
+            down_btn.setEnabled(idx < len(self._targets) - 1)
+            down_btn.clicked.connect(lambda _=False, tt=t: self._move_target(tt, 1))
+            move_col.addWidget(up_btn)
+            move_col.addWidget(down_btn)
+            top_row.addLayout(move_col)
+
             is_current = t.id == self._current_id
             name_text = ("▶ " if is_current else "") + t.name
             name_label = QLabel(name_text)

@@ -9,10 +9,12 @@ from __future__ import annotations
 import sys
 
 from PySide6.QtGui import QFontDatabase, QIcon
-from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+from PySide6.QtWidgets import QApplication, QMenu, QMessageBox, QSystemTrayIcon
 
 from app.alarm_manager import AlarmManager
-from app.autostart import ensure_autostart_registered
+from app.autostart import (ensure_autostart_registered,
+                            ensure_uninstall_entry_registered,
+                            remove_windows_integration)
 from app.azan_scheduler import AzanScheduler
 from app.i18n import translator
 from app.paths import assets_root, icon_path
@@ -62,12 +64,30 @@ def _load_fonts() -> tuple[list[str], list[str]]:
     return all_families, arabic_families
 
 
+def _run_uninstall() -> int:
+    """Entry point for Apps & Features -> Uninstall (registered as
+    `"<exe>" --uninstall` in ensure_uninstall_entry_registered())."""
+    remove_windows_integration()
+    app = QApplication(sys.argv)
+    QMessageBox.information(
+        None, "MuslimDesk",
+        "MuslimDesk has been uninstalled: it will no longer start with Windows "
+        "and has been removed from Apps & Features.\n\n"
+        "You can now delete MuslimDesk.exe.",
+    )
+    return 0
+
+
 def main() -> int:
+    if "--uninstall" in sys.argv:
+        return _run_uninstall()
+
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     app.setApplicationName("MuslimDesk")
 
     ensure_autostart_registered()
+    ensure_uninstall_entry_registered()
 
     _all_families, available_arabic_fonts = _load_fonts()
     if not available_arabic_fonts:

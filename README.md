@@ -67,7 +67,7 @@ Release notes: [v1.0.1](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.
 2. Double-click to run it. Windows SmartScreen may warn about an unrecognized publisher (this is expected for an unsigned open-source app) — click **More info → Run anyway**.
 3. On first launch, open **Settings** to set your location (country/city or manual coordinates), calculation method, madhab, azan voice, and language (Bengali/English).
 4. The app minimizes to the system tray and keeps running in the background so it can play the Azan and any alarms at the right time — click the tray icon to reopen the window.
-5. MuslimDesk registers itself to start automatically with Windows (per-user, no admin rights needed). To uninstall, simply delete the `.exe` and remove the `MuslimDesk` entry it created under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` (or run the app once and use a future uninstaller, if packaged as one).
+5. MuslimDesk registers itself to start automatically with Windows and adds a proper entry to **Settings → Apps → Installed apps** (per-user, no admin rights needed — it doesn't move or copy the exe anywhere). **To uninstall:** open Settings → Apps → Installed apps, find MuslimDesk, and click Uninstall — this stops the auto-start and removes the Start Menu shortcut. Then just delete `MuslimDesk.exe` itself.
 
 ## Running from source
 

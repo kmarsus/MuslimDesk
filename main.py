@@ -17,8 +17,10 @@ from app.autostart import (ensure_autostart_registered,
                             remove_windows_integration)
 from app.azan_scheduler import AzanScheduler
 from app.i18n import translator
+from app.installer import ensure_installed_and_relaunch, schedule_install_dir_deletion
 from app.paths import assets_root, icon_path
 from app.settings import settings
+from app.single_instance import start_server, try_signal_existing_instance
 from app.ui.main_window import MainWindow
 from app.ui.widgets.alarm_ring_dialog import AlarmRingDialog
 from app.ui.widgets.azan_notification_dialog import AzanNotificationDialog
@@ -68,12 +70,13 @@ def _run_uninstall() -> int:
     """Entry point for Apps & Features -> Uninstall (registered as
     `"<exe>" --uninstall` in ensure_uninstall_entry_registered())."""
     remove_windows_integration()
+    schedule_install_dir_deletion()
     app = QApplication(sys.argv)
     QMessageBox.information(
         None, "MuslimDesk",
         "MuslimDesk has been uninstalled: it will no longer start with Windows "
-        "and has been removed from Apps & Features.\n\n"
-        "You can now delete MuslimDesk.exe.",
+        "and has been removed from Apps & Features. The installed files will "
+        "be deleted in a moment.",
     )
     return 0
 
@@ -85,6 +88,11 @@ def main() -> int:
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     app.setApplicationName("MuslimDesk")
+
+    if try_signal_existing_instance():
+        return 0
+
+    ensure_installed_and_relaunch()
 
     ensure_autostart_registered()
     ensure_uninstall_entry_registered()
@@ -113,6 +121,8 @@ def main() -> int:
 
     window = MainWindow(scheduler, alarm_manager, available_arabic_fonts,
                          on_speed_tray_changed=_set_speed_tray_visible, voice_clock=voice_clock)
+
+    _instance_server = start_server(lambda: (window.show(), window.raise_(), window.activateWindow()))
 
     if settings.show_speed_tray:
         _set_speed_tray_visible(True)

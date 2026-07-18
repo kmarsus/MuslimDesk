@@ -17,6 +17,7 @@ class TasbihView(QWidget):
         super().__init__(parent)
         self._targets: list[TasbihTarget] = load_targets()
         self._current_id: str | None = None
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -71,6 +72,11 @@ class TasbihView(QWidget):
         count_btn_row.addWidget(self.count_btn, 1)
         self.counter_card.addLayout(count_btn_row)
 
+        self.tap_hint_label = QLabel()
+        self.tap_hint_label.setObjectName("Muted")
+        self.tap_hint_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.counter_card.addWidget(self.tap_hint_label)
+
         self.all_done_label = QLabel()
         self.all_done_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.all_done_label.setObjectName("Muted")
@@ -119,6 +125,17 @@ class TasbihView(QWidget):
             self._pick_current()
         self._save()
         self._refresh()
+
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        self.setFocus()
+
+    def keyPressEvent(self, event) -> None:
+        if event.key() == Qt.Key.Key_Space:
+            self._tap()
+            event.accept()
+            return
+        super().keyPressEvent(event)
 
     def _untap(self) -> None:
         t = self._current_target()
@@ -282,4 +299,5 @@ class TasbihView(QWidget):
         self.reset_all_btn.setText(translator.t("reset_all"))
         self.targets_title.setText(translator.t("tasbih_targets_title"))
         self.all_done_label.setText(translator.t("all_targets_completed"))
+        self.tap_hint_label.setText(translator.t("tasbih_tap_hint"))
         self._refresh()

@@ -158,6 +158,8 @@ _STRINGS: dict[str, dict[str, str]] = {
     "tasbih_targets_title": {"en": "My Targets", "bn": "আমার লক্ষ্যসমূহ"},
     "all_targets_completed": {"en": "🎉 All active targets completed! Add more or reset.",
                                "bn": "🎉 সব সক্রিয় লক্ষ্য সম্পন্ন হয়েছে! আরও যোগ করুন অথবা রিসেট করুন।"},
+    "tasbih_tap_hint": {"en": "🖱️ Click the button or ⌨️ press Space to count",
+                         "bn": "🖱️ বাটনে ক্লিক করুন অথবা ⌨️ স্পেসবার চাপুন — দুইভাবেই গণনা হবে"},
     "active": {"en": "Active", "bn": "সক্রিয়"},
     "completed": {"en": "Completed", "bn": "সম্পন্ন"},
     "edit": {"en": "Edit", "bn": "সম্পাদনা"},

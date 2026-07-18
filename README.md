@@ -11,7 +11,9 @@ Think of it as a Windows equivalent to popular mobile Muslim/Azan apps (like Mus
 
 ## Download
 
-Get the latest **standalone `MuslimDesk.exe`** (no installation required — just download and run) from the [**Releases**](https://github.com/kmarsus/MuslimDesk/releases) page. No Python installation needed.
+**[⬇ Download MuslimDesk.exe (v1.0.0)](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.0/MuslimDesk.exe)** — standalone, no installation required, no Python needed.
+
+Release notes: [v1.0.0](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.0)
 
 ## Screenshots
 
@@ -61,7 +63,7 @@ Get the latest **standalone `MuslimDesk.exe`** (no installation required — jus
 
 ## Installation & Usage
 
-1. Download `MuslimDesk.exe` from the [Releases](https://github.com/kmarsus/MuslimDesk/releases) page — it's a single portable file, no installer needed.
+1. [Download `MuslimDesk.exe`](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.0/MuslimDesk.exe) — it's a single portable file, no installer needed.
 2. Double-click to run it. Windows SmartScreen may warn about an unrecognized publisher (this is expected for an unsigned open-source app) — click **More info → Run anyway**.
 3. On first launch, open **Settings** to set your location (country/city or manual coordinates), calculation method, madhab, azan voice, and language (Bengali/English).
 4. The app minimizes to the system tray and keeps running in the background so it can play the Azan and any alarms at the right time — click the tray icon to reopen the window.

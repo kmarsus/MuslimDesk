@@ -11,9 +11,9 @@ Think of it as a Windows equivalent to popular mobile Muslim/Azan apps (like Mus
 
 ## Download
 
-**[⬇ Download MuslimDesk.exe (v1.0.4)](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.4/MuslimDesk.exe)** — standalone, no installation required, no Python needed.
+**[⬇ Download MuslimDesk.exe (v1.0.5)](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.5/MuslimDesk.exe)** — standalone, no installation required, no Python needed.
 
-Release notes: [v1.0.4](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.4)
+Release notes: [v1.0.5](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.5)
 
 ## Screenshots
 
@@ -58,12 +58,12 @@ Release notes: [v1.0.4](https://github.com/kmarsus/MuslimDesk/releases/tag/v1.0.
 - **Alarm Clock** — repeatable alarms with an optional "shut down PC" countdown.
 - **Voice Clock** — announces the time out loud every 15/30/60 minutes.
 - **Taskbar internet speed meter** — optional, docks next to the system tray.
-- Bengali/English UI, light/dark theme, selectable Arabic and system fonts.
+- Bengali/English UI, light/dark theme, separately selectable Arabic-script font and interface font (Hind Siliguri, Noto Serif Bengali, or any installed system font).
 - Starts automatically with Windows and runs continuously from the tray so azan/alarms are never missed — there's no Exit option; uninstalling (or Task Manager) is the only way to stop it.
 
 ## Installation & Usage
 
-1. [Download `MuslimDesk.exe`](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.4/MuslimDesk.exe) — it's a single portable file, no installer needed.
+1. [Download `MuslimDesk.exe`](https://github.com/kmarsus/MuslimDesk/releases/download/v1.0.5/MuslimDesk.exe) — it's a single portable file, no installer needed.
 2. Double-click to run it. Windows SmartScreen may warn about an unrecognized publisher (this is expected for an unsigned open-source app) — click **More info → Run anyway** (or right-click the downloaded file → Properties → check "Unblock" beforehand to skip the prompt entirely).
 3. On first run, MuslimDesk copies itself to `%LOCALAPPDATA%\Programs\MuslimDesk` and relaunches from there — after that, you can safely delete the file you originally downloaded.
 4. Open **Settings** to set your location (country/city or manual coordinates), calculation method, madhab, azan voice, and language (Bengali/English).

@@ -57,12 +57,15 @@ DARK = Palette(
 )
 
 
-def stylesheet(p: Palette) -> str:
+def stylesheet(p: Palette, ui_font: str | None = None) -> str:
+    font_stack = "'Segoe UI', 'HindSiliguri', sans-serif"
+    if ui_font:
+        font_stack = f"'{ui_font}', {font_stack}"
     return f"""
     QWidget {{
         background-color: {p.background};
         color: {p.ink};
-        font-family: 'Segoe UI', 'HindSiliguri', sans-serif;
+        font-family: {font_stack};
         font-size: 13px;
     }}
     QMainWindow {{ background-color: {p.background}; }}

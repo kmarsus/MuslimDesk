@@ -64,6 +64,17 @@ class Settings:
     def arabic_font(self, v: str) -> None:
         self._set("arabic_font", v)
 
+    @property
+    def ui_font(self) -> str:
+        """Font for the general interface text (menus, buttons, Bangla labels,
+        etc.) -- separate from arabic_font, which only affects Quran/Azkar/Dua
+        Arabic-script text."""
+        return self._get("ui_font", "System Default")
+
+    @ui_font.setter
+    def ui_font(self, v: str) -> None:
+        self._set("ui_font", v)
+
     # ── location ──────────────────────────────────────────────────────
     @property
     def location_mode(self) -> str:

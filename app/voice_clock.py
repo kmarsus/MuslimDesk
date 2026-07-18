@@ -80,6 +80,19 @@ def _bn_clip_names(now: datetime) -> list[str]:
     return names
 
 
+def _u8_to_s16le(raw: bytes) -> bytes:
+    """Converts 8-bit unsigned PCM (silence=128) to 16-bit signed little-endian
+    PCM. Some Windows media backends don't reliably decode past the first
+    chunk of 8-bit WAV audio, cutting playback short; 16-bit PCM is
+    universally supported."""
+    out = bytearray(len(raw) * 2)
+    for i, b in enumerate(raw):
+        s = (b - 128) * 256
+        out[2 * i] = s & 0xFF
+        out[2 * i + 1] = (s >> 8) & 0xFF
+    return bytes(out)
+
+
 def _concat_clips(names: list[str], gap_ms: int = 260) -> str | None:
     """Concatenates bundled WAV word clips (with a short silence gap between
     hour and minute, standing in for the comma pause) into one temp file."""
@@ -97,10 +110,17 @@ def _concat_clips(names: list[str], gap_ms: int = 260) -> str | None:
                 frames.append(w.readframes(w.getnframes()))
         if params is None:
             return None
+        raw = b"".join(frames)
+        sampwidth = params.sampwidth
+        if sampwidth == 1:
+            raw = _u8_to_s16le(raw)
+            sampwidth = 2
         out_path = user_data_dir() / "voice_clock_tmp.wav"
         with wave.open(str(out_path), "wb") as out:
-            out.setparams(params)
-            out.writeframes(b"".join(frames))
+            out.setnchannels(params.nchannels)
+            out.setsampwidth(sampwidth)
+            out.setframerate(params.framerate)
+            out.writeframes(raw)
         return str(out_path)
     except OSError:
         return None

@@ -29,6 +29,7 @@ from app.voice_clock import VoiceClock
 
 
 _ARABIC_FONT_FILES = ["Amiri-Regular.ttf", "ScheherazadeNew-Regular.ttf", "IndoPak.ttf", "Uthmanic.otf"]
+_BANGLA_FONT_FILES = ["HindSiliguri-Regular.ttf", "NotoSerifBengaliRegular.ttf"]
 
 # Common Windows-installed fonts worth offering alongside the bundled Arabic
 # ones -- only added if actually present on this machine (QFontDatabase
@@ -38,10 +39,13 @@ _COMMON_SYSTEM_FONTS = [
 ]
 
 
-def _load_fonts() -> tuple[list[str], list[str]]:
-    """Registers every bundled font and returns (all_families, selectable_font_choices)."""
+def _load_fonts() -> tuple[list[str], list[str], list[str]]:
+    """Registers every bundled font and returns (all_families, arabic_font_choices,
+    ui_font_choices) -- the latter two are separate pickers: one for Quran/Azkar/Dua
+    Arabic script, one for the general Bangla/English interface text."""
     all_families: list[str] = []
     arabic_families: list[str] = []
+    ui_families: list[str] = []
     fonts_dir = assets_root() / "fonts"
     if fonts_dir.exists():
         for f in sorted(fonts_dir.glob("*")):
@@ -57,13 +61,19 @@ def _load_fonts() -> tuple[list[str], list[str]]:
             if f.name in _ARABIC_FONT_FILES and fams:
                 if fams[0] not in arabic_families:
                     arabic_families.append(fams[0])
+            if f.name in _BANGLA_FONT_FILES and fams:
+                if fams[0] not in ui_families:
+                    ui_families.append(fams[0])
 
     installed = set(QFontDatabase.families())
     for fam in _COMMON_SYSTEM_FONTS:
-        if fam in installed and fam not in arabic_families:
-            arabic_families.append(fam)
+        if fam in installed:
+            if fam not in arabic_families:
+                arabic_families.append(fam)
+            if fam not in ui_families:
+                ui_families.append(fam)
 
-    return all_families, arabic_families
+    return all_families, arabic_families, ui_families
 
 
 def _run_uninstall() -> int:
@@ -97,9 +107,11 @@ def main() -> int:
     ensure_autostart_registered()
     ensure_uninstall_entry_registered()
 
-    _all_families, available_arabic_fonts = _load_fonts()
+    _all_families, available_arabic_fonts, available_ui_fonts = _load_fonts()
     if not available_arabic_fonts:
         available_arabic_fonts = ["Amiri"]
+    if not available_ui_fonts:
+        available_ui_fonts = ["Segoe UI"]
 
     translator.set_language(settings.language)
 
@@ -119,7 +131,7 @@ def main() -> int:
             _speed_overlay.stop()
             _speed_overlay = None
 
-    window = MainWindow(scheduler, alarm_manager, available_arabic_fonts,
+    window = MainWindow(scheduler, alarm_manager, available_arabic_fonts, available_ui_fonts,
                          on_speed_tray_changed=_set_speed_tray_visible, voice_clock=voice_clock)
 
     _instance_server = start_server(lambda: (window.show(), window.raise_(), window.activateWindow()))

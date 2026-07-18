@@ -169,6 +169,7 @@ _STRINGS: dict[str, dict[str, str]] = {
     "theme": {"en": "Theme", "bn": "থিম"},
     "dark_mode": {"en": "Dark mode", "bn": "ডার্ক মোড"},
     "arabic_font": {"en": "Arabic font", "bn": "আরবি ফন্ট"},
+    "ui_font": {"en": "Interface font (Bangla/English)", "bn": "ইন্টারফেস ফন্ট (বাংলা/ইংরেজি)"},
     "start_minimized": {"en": "Start minimized to tray", "bn": "ট্রেতে মিনিমাইজড অবস্থায় শুরু করুন"},
     "show_speed_tray": {"en": "Show internet speed in taskbar", "bn": "টাস্কবারে ইন্টারনেট গতি দেখান"},
     "voice_clock": {"en": "Voice Clock", "bn": "ভয়েস ক্লক"},

@@ -20,14 +20,17 @@ SYSTEM_DEFAULT_FONT_LABEL = "System Default"
 
 class SettingsView(QWidget):
     def __init__(self, scheduler, on_theme_changed, on_font_changed, available_fonts: list[str],
-                 on_speed_tray_changed=None, voice_clock=None, parent=None) -> None:
+                 on_speed_tray_changed=None, voice_clock=None,
+                 available_ui_fonts: list[str] | None = None, on_ui_font_changed=None, parent=None) -> None:
         super().__init__(parent)
         self._scheduler = scheduler
         self._on_theme_changed = on_theme_changed
         self._on_font_changed = on_font_changed
         self._on_speed_tray_changed = on_speed_tray_changed
         self._voice_clock = voice_clock
+        self._on_ui_font_changed = on_ui_font_changed
         self._available_fonts = [SYSTEM_DEFAULT_FONT_LABEL] + (available_fonts or ["Amiri"])
+        self._available_ui_fonts = [SYSTEM_DEFAULT_FONT_LABEL] + (available_ui_fonts or ["Segoe UI"])
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -96,6 +99,19 @@ class SettingsView(QWidget):
         font_row.addWidget(self.font_combo)
         self.general_card.addLayout(font_row)
 
+        ui_font_row = QHBoxLayout()
+        self.ui_font_title = QLabel()
+        self.ui_font_title.setObjectName("SectionTitle")
+        ui_font_row.addWidget(self.ui_font_title)
+        ui_font_row.addStretch(1)
+        self.ui_font_combo = NoScrollComboBox()
+        self.ui_font_combo.addItems(self._available_ui_fonts)
+        ui_idx = self.ui_font_combo.findText(settings.ui_font)
+        self.ui_font_combo.setCurrentIndex(ui_idx if ui_idx >= 0 else 0)
+        self.ui_font_combo.currentTextChanged.connect(self._on_ui_font_selected)
+        ui_font_row.addWidget(self.ui_font_combo)
+        self.general_card.addLayout(ui_font_row)
+
         minimize_row = QHBoxLayout()
         self.minimize_checkbox = QCheckBox()
         self.minimize_checkbox.setChecked(settings.start_minimized)
@@ -126,6 +142,11 @@ class SettingsView(QWidget):
     def _on_font_selected(self, family: str) -> None:
         settings.arabic_font = family
         self._on_font_changed(family)
+
+    def _on_ui_font_selected(self, family: str) -> None:
+        settings.ui_font = family
+        if self._on_ui_font_changed is not None:
+            self._on_ui_font_changed(family)
 
     def _on_minimize_toggled(self, checked: bool) -> None:
         settings.start_minimized = checked
@@ -529,6 +550,7 @@ class SettingsView(QWidget):
         self.lang_title.setText(translator.t("language"))
         self.dark_checkbox.setText(translator.t("dark_mode"))
         self.font_title.setText(translator.t("arabic_font"))
+        self.ui_font_title.setText(translator.t("ui_font"))
         self.minimize_checkbox.setText(translator.t("start_minimized"))
         self.speed_tray_checkbox.setText(translator.t("show_speed_tray"))
 

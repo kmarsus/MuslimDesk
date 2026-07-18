@@ -30,6 +30,7 @@ NAV_ITEMS = [
 
 class MainWindow(QMainWindow):
     def __init__(self, scheduler, alarm_manager, available_arabic_fonts: list[str],
+                 available_ui_fonts: list[str] | None = None,
                  on_speed_tray_changed=None, voice_clock=None) -> None:
         super().__init__()
         self._scheduler = scheduler
@@ -37,6 +38,7 @@ class MainWindow(QMainWindow):
         self._on_speed_tray_changed = on_speed_tray_changed
         self._voice_clock = voice_clock
         self._available_arabic_fonts = available_arabic_fonts
+        self._available_ui_fonts = available_ui_fonts or ["Segoe UI"]
         self.setWindowTitle("MuslimDesk")
         self.resize(1180, 760)
         icon_file = icon_path("logo.png")
@@ -147,6 +149,7 @@ class MainWindow(QMainWindow):
             return SettingsView(
                 self._scheduler, self.apply_theme, self.apply_arabic_font,
                 self._available_arabic_fonts, self._on_speed_tray_changed, self._voice_clock,
+                available_ui_fonts=self._available_ui_fonts, on_ui_font_changed=self.apply_ui_font,
             )
 
         def make_about():
@@ -195,7 +198,7 @@ class MainWindow(QMainWindow):
 
     def apply_theme(self, dark: bool) -> None:
         palette = theme.DARK if dark else theme.LIGHT
-        self.setStyleSheet(theme.stylesheet(palette))
+        self.setStyleSheet(theme.stylesheet(palette, ui_font=self._resolved_ui_font()))
 
     def _resolved_arabic_font(self) -> str:
         family = settings.arabic_font
@@ -209,6 +212,15 @@ class MainWindow(QMainWindow):
         for page in self._pages.values():
             if hasattr(page, "apply_font"):
                 page.apply_font(family)
+
+    def _resolved_ui_font(self) -> str | None:
+        family = settings.ui_font
+        if family == "System Default":
+            return None
+        return family
+
+    def apply_ui_font(self, _family: str) -> None:
+        self.apply_theme(settings.dark_mode)
 
     def _retranslate_sidebar(self) -> None:
         self.title_label.setText(translator.t("app_title"))

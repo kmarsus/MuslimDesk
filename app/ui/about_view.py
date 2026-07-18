@@ -55,6 +55,7 @@ class AboutView(QWidget):
         self.credit_label = QLabel()
         self.credit_label.setObjectName("Muted")
         self.credit_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.credit_label.setOpenExternalLinks(True)
         self.card.addWidget(self.credit_label)
 
         layout.addWidget(self.card)

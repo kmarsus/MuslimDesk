@@ -54,6 +54,18 @@ class HomeView(QWidget):
         translator.language_changed.connect(lambda *_: self.retranslate())
         self._tick()
 
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        if not self._timer.isActive():
+            self._timer.start(1000)
+        self._tick()
+
+    def hideEvent(self, event) -> None:
+        super().hideEvent(event)
+        # Nothing here needs to update once we're not the visible page --
+        # the countdown/Hijri-date recompute is real (if cheap) work.
+        self._timer.stop()
+
     # ── hero ──────────────────────────────────────────────────────────
     def _build_hero(self) -> None:
         self.hero = Card("HeroCard")

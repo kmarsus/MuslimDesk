@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.ui.spin_arrows import spin_arrow_qss
+
 
 @dataclass(frozen=True)
 class Palette:
@@ -97,18 +99,7 @@ def stylesheet(p: Palette) -> str:
     QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {{
         background-color: {p.light_green};
     }}
-    QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {{
-        width: 8px; height: 8px;
-        image: none;
-        border-left: 3px solid transparent; border-right: 3px solid transparent;
-        border-bottom: 5px solid {p.ink};
-    }}
-    QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {{
-        width: 8px; height: 8px;
-        image: none;
-        border-left: 3px solid transparent; border-right: 3px solid transparent;
-        border-top: 5px solid {p.ink};
-    }}
+    {spin_arrow_qss(p.ink)}
 
     #Sidebar {{
         background-color: {p.sidebar_bg};

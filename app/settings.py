@@ -190,6 +190,15 @@ class Settings:
 
     # ── misc ──────────────────────────────────────────────────────────
     @property
+    def azan_custom_message(self) -> str:
+        """Empty string means "use the default translated reminder text"."""
+        return self._get("azan_custom_message", "")
+
+    @azan_custom_message.setter
+    def azan_custom_message(self, v: str) -> None:
+        self._set("azan_custom_message", v)
+
+    @property
     def close_browsers_on_azan(self) -> bool:
         return self._get("close_browsers_on_azan", False)
 
@@ -228,6 +237,15 @@ class Settings:
     @voice_clock_interval_min.setter
     def voice_clock_interval_min(self, v: int) -> None:
         self._set("voice_clock_interval_min", v)
+
+    @property
+    def voice_clock_language(self) -> str:
+        """'bn' (recorded Bangla clips) or 'en' (SAPI5 text-to-speech)."""
+        return self._get("voice_clock_language", "bn")
+
+    @voice_clock_language.setter
+    def voice_clock_language(self, v: str) -> None:
+        self._set("voice_clock_language", v)
 
     @property
     def show_speed_tray(self) -> bool:

@@ -19,3 +19,6 @@ smoke_test*.log
 # OS
 Thumbs.db
 .DS_Store
+
+# Raw voice-bank recording used only to extract assets/audio/voice_clock/ clips
+vclock.wav

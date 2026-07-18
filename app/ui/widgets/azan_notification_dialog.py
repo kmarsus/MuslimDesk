@@ -37,10 +37,22 @@ class AzanNotificationDialog(QDialog):
         self.prayer_label.setStyleSheet("font-size: 30px; font-weight: 800;")
         layout.addWidget(self.prayer_label)
 
-        self.reminder_label = QLabel(translator.t("azan_reminder_text"))
+        message = settings.azan_custom_message.strip() or translator.t("azan_reminder_text")
+        self.reminder_label = QLabel(message)
         self.reminder_label.setWordWrap(True)
         self.reminder_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.reminder_label)
+
+        self.hadith_label = QLabel(f'"{translator.t("azan_hadith_text")}"')
+        self.hadith_label.setWordWrap(True)
+        self.hadith_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.hadith_label.setStyleSheet("font-style: italic;")
+        layout.addWidget(self.hadith_label)
+
+        self.hadith_ref_label = QLabel(translator.t("azan_hadith_ref"))
+        self.hadith_ref_label.setObjectName("Muted")
+        self.hadith_ref_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.hadith_ref_label)
 
         btn_row = QHBoxLayout()
         self.minimize_btn = QPushButton(translator.t("minimize"))

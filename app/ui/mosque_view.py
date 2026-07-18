@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from PySide6.QtCore import QThread, Qt, Signal
+from PySide6.QtCore import QThread, QUrl, Qt, Signal
+from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QListWidget,
                                 QListWidgetItem, QPushButton, QScrollArea,
                                 QVBoxLayout, QWidget)
@@ -106,6 +107,7 @@ class MosqueView(QWidget):
         self._layout.addWidget(self.status_label)
 
         self.results_list = QListWidget()
+        self.results_list.itemClicked.connect(self._open_in_maps)
         self._layout.addWidget(self.results_list)
         self._layout.addStretch(1)
 
@@ -162,7 +164,18 @@ class MosqueView(QWidget):
         self.status_label.setText(translator.t("mosques_found", n=len(results)))
         for m in results:
             text = f"🕌 {m.name}  —  {m.distance_km:.1f} km"
-            self.results_list.addItem(QListWidgetItem(text))
+            item = QListWidgetItem(text)
+            item.setData(Qt.ItemDataRole.UserRole, (m.lat, m.lon))
+            item.setToolTip(translator.t("open_in_maps"))
+            self.results_list.addItem(item)
+
+    def _open_in_maps(self, item: QListWidgetItem) -> None:
+        coords = item.data(Qt.ItemDataRole.UserRole)
+        if not coords:
+            return
+        lat, lon = coords
+        url = f"https://www.google.com/maps/search/?api=1&query={lat},{lon}"
+        QDesktopServices.openUrl(QUrl(url))
 
     def retranslate(self) -> None:
         self.heading.setText(translator.t("nav_mosques"))

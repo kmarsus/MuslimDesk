@@ -29,6 +29,7 @@ _STRINGS: dict[str, dict[str, str]] = {
                               "bn": "ম্যাপ সার্ভিসে পৌঁছানো যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"},
     "no_mosques_found": {"en": "No mosques found in this radius. Try a larger radius.", "bn": "এই পরিসীমায় কোনো মসজিদ পাওয়া যায়নি। বড় পরিসীমা চেষ্টা করুন।"},
     "mosques_found": {"en": "{n} mosques found", "bn": "{n}টি মসজিদ পাওয়া গেছে"},
+    "open_in_maps": {"en": "Click to open in Google Maps", "bn": "গুগল ম্যাপে খুলতে ক্লিক করুন"},
     "nav_settings": {"en": "Settings", "bn": "সেটিংস"},
     "nav_about": {"en": "About", "bn": "সম্পর্কে"},
 
@@ -90,12 +91,22 @@ _STRINGS: dict[str, dict[str, str]] = {
 
     # Azkar / Dua
     "search": {"en": "Search...", "bn": "খুঁজুন..."},
-    "morning_azkar": {"en": "Morning & Evening Azkar", "bn": "সকাল সন্ধ্যার আযকার"},
-    "self_rukaiya": {"en": "Self Ruqyah", "bn": "সেলফ রুকইয়াহ"},
+    "morning_azkar": {"en": "Hefazoter Amol", "bn": "হেফাজতের আমল"},
+    "self_rukaiya": {"en": "Tibbe Nabawi", "bn": "তিব্বে নববী"},
     "reference": {"en": "Reference", "bn": "রেফারেন্স"},
     "rules": {"en": "Rules", "bn": "নিয়ম"},
     "benefit_hadith": {"en": "Benefit / Hadith", "bn": "ফযীলত / হাদিস"},
     "next": {"en": "Next", "bn": "পরবর্তী"},
+    "tier_high_title": {"en": "Level 1 (General Protection)", "bn": "প্রাথমিক স্তর (সাধারণ নিরাপত্তা)"},
+    "tier_medium_title": {"en": "Level 2 (Special Protection)", "bn": "দ্বিতীয় স্তর (বিশেষ নিরাপত্তা)"},
+    "tier_low_title": {"en": "Level 3 (Advanced Protection)", "bn": "তৃতীয় স্তর (উচ্চমানের নিরাপত্তা)"},
+    "mashallah": {"en": "MashaAllah!", "bn": "মাশাআল্লাহ!"},
+    "completed_tier_message": {
+        "en": 'You have successfully completed the duas of the "{tier}" level.',
+        "bn": 'আপনি সফলভাবে "{tier}" পর্যায়ের দোয়াগুলো সম্পন্ন করেছেন।',
+    },
+    "now_starting_tier": {"en": "Now starting: {tier}", "bn": "এখন শুরু হচ্ছে: {tier}"},
+    "continue_btn": {"en": "Continue", "bn": "চালিয়ে যান"},
     "categories": {"en": "Categories", "bn": "বিষয়সমূহ"},
     "loading": {"en": "Loading...", "bn": "লোড হচ্ছে..."},
     "offline_no_data": {"en": "No internet connection and no cached data yet.",
@@ -111,7 +122,11 @@ _STRINGS: dict[str, dict[str, str]] = {
     "arabic_text": {"en": "Arabic", "bn": "আরবি"},
     "translation": {"en": "Translation", "bn": "অনুবাদ"},
     "recitation": {"en": "Recitation (Mishary Alafasy)", "bn": "তিলাওয়াত (মিশারী আলাফাসি)"},
-    "go_to_bookmark": {"en": "Go to Bookmark", "bn": "বুকমার্কে যান"},
+    "go_to_bookmark": {"en": "★ Go to Bookmark", "bn": "★ বুকমার্কে যান"},
+    "bookmark": {"en": "☆ Bookmark", "bn": "☆ বুকমার্ক করুন"},
+    "bookmarked": {"en": "★ Bookmarked", "bn": "★ বুকমার্ক করা হয়েছে"},
+    "play": {"en": "▶ Play", "bn": "▶ চালান"},
+    "pause": {"en": "⏸ Pause", "bn": "⏸ থামান"},
 
     # Hijri
     "hijri_today": {"en": "Today", "bn": "আজ"},
@@ -119,6 +134,11 @@ _STRINGS: dict[str, dict[str, str]] = {
     "days_left": {"en": "in {n} days", "bn": "{n} দিন বাকি"},
     "today_label": {"en": "Today", "bn": "আজ"},
     "hijri_offset_label": {"en": "Date adjustment (days)", "bn": "তারিখ সমন্বয় (দিন)"},
+    "siyam_short": {"en": "Siyam", "bn": "সিয়াম"},
+    "siyam_tooltip": {"en": "Recommended (sunnah) voluntary fasting day", "bn": "সুন্নাত নফল রোজার দিন"},
+    "legend_holiday": {"en": "Friday (holiday)", "bn": "শুক্রবার (সাপ্তাহিক ছুটি)"},
+    "legend_siyam": {"en": "Mon/Thu -- Siyam", "bn": "সোম/বৃহঃ -- সিয়াম"},
+    "legend_event": {"en": "Islamic day", "bn": "ইসলামিক দিবস"},
 
     # Qibla
     "qibla_bearing": {"en": "Qibla bearing from North", "bn": "উত্তর থেকে কিবলার দিক"},
@@ -131,6 +151,16 @@ _STRINGS: dict[str, dict[str, str]] = {
     # Tasbih
     "tasbih_target": {"en": "Target", "bn": "লক্ষ্য"},
     "reset": {"en": "Reset", "bn": "রিসেট"},
+    "edit_tasbih_target": {"en": "Tasbih Target", "bn": "তাসবীহ লক্ষ্য"},
+    "tasbih_name_placeholder": {"en": "e.g. SubhanAllah", "bn": "যেমনঃ সুবহানাল্লাহ"},
+    "add_tasbih_target": {"en": "+ Add Target", "bn": "+ লক্ষ্য যোগ করুন"},
+    "reset_all": {"en": "Reset All", "bn": "সব রিসেট করুন"},
+    "tasbih_targets_title": {"en": "My Targets", "bn": "আমার লক্ষ্যসমূহ"},
+    "all_targets_completed": {"en": "🎉 All active targets completed! Add more or reset.",
+                               "bn": "🎉 সব সক্রিয় লক্ষ্য সম্পন্ন হয়েছে! আরও যোগ করুন অথবা রিসেট করুন।"},
+    "active": {"en": "Active", "bn": "সক্রিয়"},
+    "completed": {"en": "Completed", "bn": "সম্পন্ন"},
+    "edit": {"en": "Edit", "bn": "সম্পাদনা"},
 
     # Settings
     "language": {"en": "Language", "bn": "ভাষা"},
@@ -160,9 +190,21 @@ _STRINGS: dict[str, dict[str, str]] = {
         "en": "The Azan is being called. Pause your work, respond to the Mu'adhdhin, and prepare for Salah.",
         "bn": "আজান দেওয়া হচ্ছে। আপনার কাজ থামান, মুয়াজ্জিনের জবাব দিন এবং সালাতের জন্য প্রস্তুত হোন।",
     },
+    "azan_hadith_text": {
+        "en": "On the Day of Judgment, Allah will first take account of prayer. If the prayer is sound, "
+              "the rest of one's deeds will be sound; if it is corrupt, all deeds will be corrupt.",
+        "bn": "কেয়ামতের দিন আল্লাহ প্রথমে নামাজের হিসাব নেবেন। যদি নামাজ ঠিক থাকে, তবে বাকি কাজও ঠিক থাকবে; "
+              "আর যদি নামাজ নষ্ট হয়, তবে সব কাজই নষ্ট হবে।",
+    },
+    "azan_hadith_ref": {"en": "Sunan al-Tirmidhi, Hadith 413", "bn": "সুনানে তিরমিজি, হাদিস: ৪১৩"},
+    "azan_message_label": {"en": "Azan reminder message", "bn": "আজানের রিমাইন্ডার বার্তা"},
+    "reset_default": {"en": "Reset to default", "bn": "ডিফল্টে ফিরুন"},
     "minimize": {"en": "Minimize", "bn": "মিনিমাইজ"},
     "close": {"en": "Close", "bn": "বন্ধ করুন"},
-    "developed_by": {"en": "Developed by Engr. Maw. Khandaker Marsus", "bn": "ডেভেলপার: Engr. Maw. Khandaker Marsus"},
+    "developed_by": {
+        "en": 'Developed by Engr. Maw. Khandaker Marsus &middot; <a href="https://marsus.com.bd/">marsus.com.bd</a>',
+        "bn": 'ডেভেলপার: Engr. Maw. Khandaker Marsus &middot; <a href="https://marsus.com.bd/">marsus.com.bd</a>',
+    },
 
     # About
     "about_text": {

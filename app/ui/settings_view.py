@@ -147,6 +147,19 @@ class SettingsView(QWidget):
         self.voice_clock_checkbox.toggled.connect(self._on_voice_clock_toggled)
         self.voice_clock_card.addWidget(self.voice_clock_checkbox)
 
+        lang_row = QHBoxLayout()
+        self.voice_clock_lang_label = QLabel()
+        lang_row.addWidget(self.voice_clock_lang_label)
+        self.voice_clock_lang_combo = NoScrollComboBox()
+        self.voice_clock_lang_combo.addItem("বাংলা", "bn")
+        self.voice_clock_lang_combo.addItem("English", "en")
+        idx = self.voice_clock_lang_combo.findData(settings.voice_clock_language)
+        self.voice_clock_lang_combo.setCurrentIndex(idx if idx >= 0 else 0)
+        self.voice_clock_lang_combo.currentIndexChanged.connect(self._on_voice_clock_lang_changed)
+        lang_row.addWidget(self.voice_clock_lang_combo)
+        lang_row.addStretch(1)
+        self.voice_clock_card.addLayout(lang_row)
+
         interval_row = QHBoxLayout()
         self.voice_clock_interval_label = QLabel()
         interval_row.addWidget(self.voice_clock_interval_label)
@@ -168,6 +181,9 @@ class SettingsView(QWidget):
 
     def _on_voice_clock_toggled(self, checked: bool) -> None:
         settings.voice_clock_enabled = checked
+
+    def _on_voice_clock_lang_changed(self, _idx: int) -> None:
+        settings.voice_clock_language = self.voice_clock_lang_combo.currentData()
 
     def _on_voice_clock_interval_changed(self, _idx: int) -> None:
         settings.voice_clock_interval_min = self.voice_clock_interval_combo.currentData()
@@ -365,18 +381,37 @@ class SettingsView(QWidget):
         grid.setSpacing(8)
         self.adjust_card.addLayout(grid)
         self._adjust_labels: dict[str, QLabel] = {}
+        self._time_preview_labels: dict[str, QLabel] = {}
         for i, key in enumerate(ALL_PRAYER_KEYS):
             label = QLabel(translator.t(f"prayer_{key}"))
             spin = NoScrollSpinBox()
-            spin.setRange(-60, 60)
+            spin.setRange(-1440, 1440)  # +/- 24h -- effectively unlimited for a time-of-day shift
             spin.setSuffix(" min")
             spin.setValue(settings.prayer_offset(key))
             spin.valueChanged.connect(lambda v, k=key: self._set_offset(k, v))
-            grid.addWidget(label, i // 3, (i % 3) * 2)
-            grid.addWidget(spin, i // 3, (i % 3) * 2 + 1)
+            time_preview = QLabel("--:--")
+            time_preview.setObjectName("Muted")
+            time_preview.setStyleSheet("font-weight: 700;")
+            col = (i % 3) * 3
+            grid.addWidget(label, i // 3, col)
+            grid.addWidget(spin, i // 3, col + 1)
+            grid.addWidget(time_preview, i // 3, col + 2)
             self._adjust_labels[key] = label
+            self._time_preview_labels[key] = time_preview
 
         self._layout.addWidget(self.adjust_card)
+        self._scheduler.times_recomputed.connect(lambda *_: self._refresh_time_previews())
+        self._refresh_time_previews()
+
+    def _refresh_time_previews(self) -> None:
+        times = self._scheduler.times
+        if times is None:
+            return
+        times_map = times.as_dict()
+        for key, label in self._time_preview_labels.items():
+            t = times_map.get(key)
+            if t is not None:
+                label.setText(t.strftime("%I:%M %p"))
 
     def _set_offset(self, key: str, minutes: int) -> None:
         settings.set_prayer_offset(key, minutes)
@@ -407,8 +442,13 @@ class SettingsView(QWidget):
             preview_btn.clicked.connect(lambda _=False, k=key, c=voice_combo: self._preview(k, c))
             row.addWidget(preview_btn)
 
+            stop_btn = QPushButton(translator.t("stop"))
+            stop_btn.setObjectName("Ghost")
+            stop_btn.clicked.connect(self._stop_preview)
+            row.addWidget(stop_btn)
+
             self.azan_card.addLayout(row)
-            self._prayer_rows[key] = (checkbox, voice_combo, preview_btn)
+            self._prayer_rows[key] = (checkbox, voice_combo, preview_btn, stop_btn)
 
         self._layout.addWidget(self.azan_card)
 
@@ -424,12 +464,28 @@ class SettingsView(QWidget):
     def _preview(self, key: str, combo: VoicePickerCombo) -> None:
         self._scheduler.preview_voice_id(combo.current_voice_id(), is_fajr=key == "fajr")
 
+    def _stop_preview(self) -> None:
+        self._scheduler.stop_preview()
+
     # ── azan behavior (close browsers) ───────────────────────────────
     def _build_azan_behavior_card(self) -> None:
         self.behavior_card = Card()
         self.behavior_title = QLabel()
         self.behavior_title.setObjectName("SectionTitle")
         self.behavior_card.addWidget(self.behavior_title)
+
+        self.azan_message_label = QLabel()
+        self.behavior_card.addWidget(self.azan_message_label)
+        message_row = QHBoxLayout()
+        self.azan_message_edit = QLineEdit(settings.azan_custom_message)
+        self.azan_message_edit.setPlaceholderText(translator.t("azan_reminder_text"))
+        self.azan_message_edit.textChanged.connect(self._on_azan_message_changed)
+        message_row.addWidget(self.azan_message_edit, 1)
+        self.azan_message_reset_btn = QPushButton()
+        self.azan_message_reset_btn.setObjectName("Ghost")
+        self.azan_message_reset_btn.clicked.connect(self._reset_azan_message)
+        message_row.addWidget(self.azan_message_reset_btn)
+        self.behavior_card.addLayout(message_row)
 
         self.close_browsers_checkbox = QCheckBox()
         self.close_browsers_checkbox.setChecked(settings.close_browsers_on_azan)
@@ -454,6 +510,13 @@ class SettingsView(QWidget):
 
         self._layout.addWidget(self.behavior_card)
 
+    def _on_azan_message_changed(self, text: str) -> None:
+        settings.azan_custom_message = text
+
+    def _reset_azan_message(self) -> None:
+        self.azan_message_edit.clear()
+        settings.azan_custom_message = ""
+
     def _on_close_browsers_toggled(self, checked: bool) -> None:
         settings.close_browsers_on_azan = checked
 
@@ -471,6 +534,7 @@ class SettingsView(QWidget):
 
         self.voice_clock_title.setText(translator.t("voice_clock"))
         self.voice_clock_checkbox.setText(translator.t("voice_clock_enable"))
+        self.voice_clock_lang_label.setText(translator.t("language"))
         self.voice_clock_interval_label.setText(translator.t("voice_clock_interval"))
         self.voice_clock_test_btn.setText(translator.t("test"))
 
@@ -493,11 +557,15 @@ class SettingsView(QWidget):
             label.setText(translator.t(f"prayer_{key}"))
 
         self.azan_title.setText(translator.t("azan_settings"))
-        for key, (checkbox, _combo, preview_btn) in self._prayer_rows.items():
+        for key, (checkbox, _combo, preview_btn, stop_btn) in self._prayer_rows.items():
             checkbox.setText(translator.t(f"prayer_{key}"))
             preview_btn.setText(translator.t("preview"))
+            stop_btn.setText(translator.t("stop"))
 
         self.behavior_title.setText(translator.t("azan_behavior"))
+        self.azan_message_label.setText(translator.t("azan_message_label"))
+        self.azan_message_edit.setPlaceholderText(translator.t("azan_reminder_text"))
+        self.azan_message_reset_btn.setText(translator.t("reset_default"))
         self.close_browsers_checkbox.setText(translator.t("close_browsers_on_azan"))
         self.close_browsers_caption.setText(translator.t("close_browsers_caption"))
         self.close_delay_label.setText(translator.t("close_browsers_delay"))

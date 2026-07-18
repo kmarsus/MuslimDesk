@@ -12,6 +12,7 @@ from PySide6.QtGui import QFontDatabase, QIcon
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from app.alarm_manager import AlarmManager
+from app.autostart import ensure_autostart_registered
 from app.azan_scheduler import AzanScheduler
 from app.i18n import translator
 from app.paths import assets_root, icon_path
@@ -65,6 +66,8 @@ def main() -> int:
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     app.setApplicationName("MuslimDesk")
+
+    ensure_autostart_registered()
 
     _all_families, available_arabic_fonts = _load_fonts()
     if not available_arabic_fonts:
@@ -130,8 +133,6 @@ def main() -> int:
     menu = QMenu()
     show_action = menu.addAction(translator.t("tray_show"))
     show_action.triggered.connect(lambda: (window.show(), window.raise_(), window.activateWindow()))
-    exit_action = menu.addAction(translator.t("tray_exit"))
-    exit_action.triggered.connect(app.quit)
     tray_icon.setContextMenu(menu)
     tray_icon.activated.connect(
         lambda reason: (window.show(), window.raise_(), window.activateWindow())
@@ -140,7 +141,6 @@ def main() -> int:
 
     def _retranslate_tray(*_args) -> None:
         show_action.setText(translator.t("tray_show"))
-        exit_action.setText(translator.t("tray_exit"))
 
     translator.language_changed.connect(_retranslate_tray)
 

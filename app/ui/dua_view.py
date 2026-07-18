@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (QGridLayout, QHBoxLayout, QLabel, QLineEdit,
 from app.data_loader import fetch_home_content
 from app.i18n import translator
 from app.settings import settings
+from app.ui.widgets.arabic_font import set_arabic_font
 from app.ui.widgets.card import Card
 
 
@@ -93,6 +94,7 @@ class DuaView(QWidget):
         translator.language_changed.connect(self._reload)
         self.retranslate()
         self._reload()
+        self.apply_font(settings.arabic_font)
 
     def _reload(self, *_args) -> None:
         self._data = fetch_home_content(translator.lang)
@@ -147,10 +149,7 @@ class DuaView(QWidget):
         self.dua_ref_label.setText(d.get("reference", "").strip())
 
     def apply_font(self, family: str) -> None:
-        f = self.dua_arabic_label.font()
-        f.setFamily(family)
-        f.setPointSize(16)
-        self.dua_arabic_label.setFont(f)
+        set_arabic_font(self.dua_arabic_label, family, size_px=21)
 
     def retranslate(self) -> None:
         self.heading.setText(translator.t("nav_dua"))

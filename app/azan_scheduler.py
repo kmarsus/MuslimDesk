@@ -81,6 +81,9 @@ class AzanScheduler(QObject):
         if self._tray_icon is not None:
             self._tray_icon.showMessage(translator.t("app_title"), translator.t("preview"))
 
+    def stop_preview(self) -> None:
+        self._player.stop()
+
     def _play_path(self, path: str) -> None:
         self._audio_out.setVolume(max(0, min(100, settings.azan_volume)) / 100.0)
         self._player.setSource(QUrl.fromLocalFile(path))

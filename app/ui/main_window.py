@@ -9,18 +9,7 @@ from app.i18n import translator
 from app.paths import icon_path
 from app.settings import settings
 from app.ui import theme
-from app.ui.about_view import AboutView
-from app.ui.alarm_view import AlarmView
-from app.ui.asmaul_husna_view import AsmaulHusnaView
-from app.ui.azkar_view import AzkarView
-from app.ui.dua_view import DuaView
-from app.ui.hijri_view import HijriView
 from app.ui.home_view import HomeView
-from app.ui.mosque_view import MosqueView
-from app.ui.prayer_times_view import PrayerTimesView
-from app.ui.qibla_view import QiblaView
-from app.ui.settings_view import SettingsView
-from app.ui.tasbih_view import TasbihView
 
 NAV_ITEMS = [
     ("home", "nav_home", "🏠"),
@@ -47,6 +36,7 @@ class MainWindow(QMainWindow):
         self._alarm_manager = alarm_manager
         self._on_speed_tray_changed = on_speed_tray_changed
         self._voice_clock = voice_clock
+        self._available_arabic_fonts = available_arabic_fonts
         self.setWindowTitle("MuslimDesk")
         self.resize(1180, 760)
         icon_file = icon_path("logo.png")
@@ -64,9 +54,13 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         root.addWidget(self.stack, 1)
 
+        # Pages are constructed lazily on first visit (except Home, which is
+        # shown immediately) -- building all 13 screens' data/network/widget
+        # setup eagerly at startup was the single biggest startup-time and
+        # idle-RAM cost, most of which most users never even visit.
         self._routes: dict[str, int] = {}
         self._pages: dict[str, QWidget] = {}
-        self._build_pages(available_arabic_fonts)
+        self._page_factories = self._build_factories()
 
         self._select("home")
         translator.language_changed.connect(lambda *_: self._retranslate_sidebar())
@@ -100,36 +94,100 @@ class MainWindow(QMainWindow):
         self.footer_label.setObjectName("SidebarFooter")
         self.footer_label.setWordWrap(True)
         self.footer_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.footer_label.setOpenExternalLinks(True)
         layout.addWidget(self.footer_label)
 
         root.addWidget(sidebar)
 
-    def _build_pages(self, available_arabic_fonts: list[str]) -> None:
-        def add(route: str, widget: QWidget) -> None:
-            idx = self.stack.addWidget(widget)
-            self._routes[route] = idx
-            self._pages[route] = widget
+    def _build_factories(self) -> dict[str, "callable"]:
+        """One lazy constructor per route -- imports are deferred inside each
+        lambda too, so unopened screens don't even pay their module-import cost."""
+        def make_prayer_times():
+            from app.ui.prayer_times_view import PrayerTimesView
+            return PrayerTimesView(self._scheduler, self._select)
 
-        add("home", HomeView(self._scheduler, self._select))
-        add("prayer_times", PrayerTimesView(self._scheduler, self._select))
-        add("daily_azkar", AzkarView())
-        add("dua", DuaView())
-        add("asmaul_husna", AsmaulHusnaView())
-        from app.ui.quran_view import QuranView
-        add("quran", QuranView())
-        add("hijri", HijriView())
-        add("qibla", QiblaView())
-        add("mosques", MosqueView())
-        add("tasbih", TasbihView())
-        add("alarm", AlarmView(self._alarm_manager))
-        add("settings", SettingsView(
-            self._scheduler, self.apply_theme, self.apply_arabic_font, available_arabic_fonts,
-            self._on_speed_tray_changed, self._voice_clock,
-        ))
-        add("about", AboutView())
+        def make_azkar():
+            from app.ui.azkar_view import AzkarView
+            return AzkarView()
+
+        def make_dua():
+            from app.ui.dua_view import DuaView
+            return DuaView()
+
+        def make_asmaul_husna():
+            from app.ui.asmaul_husna_view import AsmaulHusnaView
+            return AsmaulHusnaView()
+
+        def make_quran():
+            from app.ui.quran_view import QuranView
+            return QuranView()
+
+        def make_hijri():
+            from app.ui.hijri_view import HijriView
+            return HijriView()
+
+        def make_qibla():
+            from app.ui.qibla_view import QiblaView
+            return QiblaView()
+
+        def make_mosques():
+            from app.ui.mosque_view import MosqueView
+            return MosqueView()
+
+        def make_tasbih():
+            from app.ui.tasbih_view import TasbihView
+            return TasbihView()
+
+        def make_alarm():
+            from app.ui.alarm_view import AlarmView
+            return AlarmView(self._alarm_manager)
+
+        def make_settings():
+            from app.ui.settings_view import SettingsView
+            return SettingsView(
+                self._scheduler, self.apply_theme, self.apply_arabic_font,
+                self._available_arabic_fonts, self._on_speed_tray_changed, self._voice_clock,
+            )
+
+        def make_about():
+            from app.ui.about_view import AboutView
+            return AboutView()
+
+        return {
+            "prayer_times": make_prayer_times,
+            "daily_azkar": make_azkar,
+            "dua": make_dua,
+            "asmaul_husna": make_asmaul_husna,
+            "quran": make_quran,
+            "hijri": make_hijri,
+            "qibla": make_qibla,
+            "mosques": make_mosques,
+            "tasbih": make_tasbih,
+            "alarm": make_alarm,
+            "settings": make_settings,
+            "about": make_about,
+        }
+
+    def _ensure_page(self, route: str) -> QWidget | None:
+        if route in self._pages:
+            return self._pages[route]
+        if route == "home":
+            widget = HomeView(self._scheduler, self._select)
+        else:
+            factory = self._page_factories.get(route)
+            if factory is None:
+                return None
+            widget = factory()
+        idx = self.stack.addWidget(widget)
+        self._routes[route] = idx
+        self._pages[route] = widget
+        if hasattr(widget, "apply_font"):
+            widget.apply_font(self._resolved_arabic_font())
+        return widget
 
     def _select(self, route: str) -> None:
-        if route not in self._routes:
+        widget = self._ensure_page(route)
+        if widget is None:
             return
         self.stack.setCurrentIndex(self._routes[route])
         for r, btn in self._nav_buttons.items():
@@ -138,6 +196,12 @@ class MainWindow(QMainWindow):
     def apply_theme(self, dark: bool) -> None:
         palette = theme.DARK if dark else theme.LIGHT
         self.setStyleSheet(theme.stylesheet(palette))
+
+    def _resolved_arabic_font(self) -> str:
+        family = settings.arabic_font
+        if family == "System Default":
+            return QFont().family()
+        return family
 
     def apply_arabic_font(self, family: str) -> None:
         if family == "System Default":

@@ -8,7 +8,16 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[('assets', 'assets')],
-    hiddenimports=[],
+    hiddenimports=[
+        # pyttsx3 picks its platform driver via a dynamic importlib.import_module()
+        # call that PyInstaller's static analysis can't see.
+        'pyttsx3.drivers',
+        'pyttsx3.drivers.sapi5',
+        'win32com.client',
+        'win32comext.shell',
+        'pythoncom',
+        'pywintypes',
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

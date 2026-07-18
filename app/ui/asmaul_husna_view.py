@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QGridLayout, QLabel, QScrollArea, QVBoxLayout, QWi
 from app.i18n import translator
 from app.paths import data_path
 from app.settings import settings
+from app.ui.widgets.arabic_font import set_arabic_font
 from app.ui.widgets.card import Card
 
 
@@ -49,10 +50,7 @@ class AsmaulHusnaView(QWidget):
             arabic.setObjectName("Arabic")
             arabic.setAlignment(Qt.AlignmentFlag.AlignRight)
             arabic.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
-            f = arabic.font()
-            f.setFamily(settings.arabic_font)
-            f.setPointSize(18)
-            arabic.setFont(f)
+            set_arabic_font(arabic, settings.arabic_font, size_px=24)
             name = QLabel(n["name"])
             name.setStyleSheet("font-weight: 700;")
             meaning = QLabel()
@@ -67,9 +65,7 @@ class AsmaulHusnaView(QWidget):
 
     def apply_font(self, family: str) -> None:
         for _n, _meaning, arabic in self._cards:
-            f = arabic.font()
-            f.setFamily(family)
-            arabic.setFont(f)
+            set_arabic_font(arabic, family, size_px=24)
 
     def retranslate(self) -> None:
         self.heading.setText(translator.t("ninety_nine_names"))

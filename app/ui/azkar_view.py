@@ -5,13 +5,19 @@ import json
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QListWidget,
                                 QListWidgetItem, QPushButton, QScrollArea,
-                                QSplitter, QTabWidget, QVBoxLayout, QWidget)
+                                QSplitter, QStackedWidget, QTabWidget,
+                                QVBoxLayout, QWidget)
 
 from app.azkar_count import format_count
 from app.i18n import translator
 from app.paths import data_path
 from app.settings import settings
+from app.ui.widgets.arabic_font import set_arabic_font
 from app.ui.widgets.card import Card
+
+_TIER_ORDER = ["High", "Medium", "Low"]
+_TIER_TITLE_KEY = {"High": "tier_high_title", "Medium": "tier_medium_title", "Low": "tier_low_title"}
+_HEADER_ROLE = Qt.ItemDataRole.UserRole + 1
 
 
 def _load(name: str) -> list[dict]:
@@ -39,12 +45,19 @@ def _merged_entries(bn_file: str, en_file: str) -> list[dict]:
 
 
 class _AzkarList(QWidget):
-    """One tab: search box + list on the left, detail card on the right."""
+    """One tab: search box + list on the left, detail card on the right.
+
+    When the entries span more than one "priority" tier (High/Medium/Low --
+    matching the Android app's 3-level structure), the list groups entries
+    under a tier header and advancing past the last item of a tier shows a
+    "MashaAllah!" checkpoint screen before continuing into the next tier."""
 
     def __init__(self, entries: list[dict]) -> None:
         super().__init__()
         self._entries = entries
         self._filtered = entries
+        self._tiered = len({e.get("priority") for e in entries} & set(_TIER_ORDER)) > 1
+        self._pending_tier: str | None = None  # tier we're about to enter, mid-checkpoint
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 12, 0, 0)
@@ -64,10 +77,28 @@ class _AzkarList(QWidget):
 
         right = QScrollArea()
         right.setWidgetResizable(True)
-        self.detail_card = Card(margins=20, spacing=10)
-        right.setWidget(self.detail_card)
+        self.right_stack = QStackedWidget()
+        right.setWidget(self.right_stack)
         splitter.addWidget(right)
         splitter.setSizes([260, 640])
+
+        self._build_detail_page()
+        self._build_checkpoint_page()
+
+        self._populate_list()
+        self.apply_font(settings.arabic_font)
+
+    # ── detail page ──────────────────────────────────────────────────
+    def _build_detail_page(self) -> None:
+        self.detail_card = Card(margins=20, spacing=10)
+        self.right_stack.addWidget(self.detail_card)
+
+        next_row = QHBoxLayout()
+        next_row.addStretch(1)
+        self.next_btn = QPushButton()
+        self.next_btn.clicked.connect(self._go_next)
+        next_row.addWidget(self.next_btn)
+        self.detail_card.addLayout(next_row)
 
         title_row = QHBoxLayout()
         self.title_label = QLabel()
@@ -108,32 +139,60 @@ class _AzkarList(QWidget):
                   self.ref_title, self.ref_label, self.benefit_title, self.benefit_label]:
             self.detail_card.addWidget(w)
 
-        next_row = QHBoxLayout()
-        next_row.addStretch(1)
-        self.next_btn = QPushButton()
-        self.next_btn.clicked.connect(self._go_next)
-        next_row.addWidget(self.next_btn)
-        self.detail_card.addLayout(next_row)
+    # ── tier-complete checkpoint page ───────────────────────────────
+    def _build_checkpoint_page(self) -> None:
+        self.checkpoint_card = Card(margins=32, spacing=14)
+        self.checkpoint_icon = QLabel("✅")
+        self.checkpoint_icon.setStyleSheet("font-size: 40px;")
+        self.checkpoint_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.checkpoint_headline = QLabel()
+        self.checkpoint_headline.setObjectName("Heading")
+        self.checkpoint_headline.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.checkpoint_done_msg = QLabel()
+        self.checkpoint_done_msg.setWordWrap(True)
+        self.checkpoint_done_msg.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.checkpoint_next_msg = QLabel()
+        self.checkpoint_next_msg.setWordWrap(True)
+        self.checkpoint_next_msg.setObjectName("SubHeading")
+        self.checkpoint_next_msg.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.checkpoint_continue_btn = QPushButton()
+        self.checkpoint_continue_btn.clicked.connect(self._continue_after_checkpoint)
+        for w in [self.checkpoint_icon, self.checkpoint_headline, self.checkpoint_done_msg,
+                  self.checkpoint_next_msg, self.checkpoint_continue_btn]:
+            self.checkpoint_card.addWidget(w)
+        self.right_stack.addWidget(self.checkpoint_card)
 
-        self._populate_list()
-        self.apply_font(settings.arabic_font)
-
+    # ── list population (with tier headers) ─────────────────────────
     def _entry_title(self, e: dict) -> str:
         if translator.lang == "en" and e.get("title_en"):
             return e["title_en"]
         return e.get("title", "").strip()
 
+    def _tier_title(self, priority: str) -> str:
+        key = _TIER_TITLE_KEY.get(priority)
+        return translator.t(key) if key else priority
+
     def _populate_list(self) -> None:
         self.list_widget.blockSignals(True)
-        current_row = self.list_widget.currentRow()
         self.list_widget.clear()
+        last_tier = None
         for e in self._filtered:
+            tier = e.get("priority") if self._tiered else None
+            if tier is not None and tier != last_tier:
+                header = QListWidgetItem(f"— {self._tier_title(tier)} —")
+                header.setFlags(Qt.ItemFlag.NoItemFlags)
+                header.setData(_HEADER_ROLE, True)
+                header.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                header.setForeground(Qt.GlobalColor.darkGreen)
+                self.list_widget.addItem(header)
+                last_tier = tier
             item = QListWidgetItem(self._entry_title(e) or "—")
             self.list_widget.addItem(item)
         self.list_widget.blockSignals(False)
+        first_real_row = 1 if (self.list_widget.count() and self.list_widget.item(0).data(_HEADER_ROLE)) else 0
         if self._filtered:
-            self.list_widget.setCurrentRow(max(0, current_row) if current_row < len(self._filtered) else 0)
-            self._show_index(self.list_widget.currentRow())
+            self.list_widget.setCurrentRow(first_real_row)
+            self._show_index(first_real_row)
 
     def _filter(self, text: str) -> None:
         text = text.strip().lower()
@@ -143,10 +202,36 @@ class _AzkarList(QWidget):
             self._filtered = [e for e in self._entries if text in self._entry_title(e).lower()]
         self._populate_list()
 
+    # ── selection maps list-row (including headers) <-> entry index ──
+    def _entry_index_for_row(self, row: int) -> int | None:
+        """Row in the QListWidget (headers included) -> index into
+        self._filtered (headers excluded), or None if row is a header."""
+        entry_i = -1
+        for r in range(row + 1):
+            item = self.list_widget.item(r)
+            if item is not None and not item.data(_HEADER_ROLE):
+                entry_i += 1
+        item = self.list_widget.item(row)
+        if item is None or item.data(_HEADER_ROLE):
+            return None
+        return entry_i
+
+    def _row_for_entry_index(self, entry_i: int) -> int:
+        count = -1
+        for r in range(self.list_widget.count()):
+            item = self.list_widget.item(r)
+            if item is not None and not item.data(_HEADER_ROLE):
+                count += 1
+                if count == entry_i:
+                    return r
+        return 0
+
     def _show_index(self, row: int) -> None:
-        if row < 0 or row >= len(self._filtered):
+        entry_i = self._entry_index_for_row(row)
+        if entry_i is None or entry_i < 0 or entry_i >= len(self._filtered):
             return
-        e = self._filtered[row]
+        self.right_stack.setCurrentWidget(self.detail_card)
+        e = self._filtered[entry_i]
         english = translator.lang == "en" and bool(e.get("title_en"))
 
         self.title_label.setText(self._entry_title(e))
@@ -183,14 +268,36 @@ class _AzkarList(QWidget):
     def _go_next(self) -> None:
         if not self._filtered:
             return
-        row = (self.list_widget.currentRow() + 1) % len(self._filtered)
-        self.list_widget.setCurrentRow(row)
+        row = self.list_widget.currentRow()
+        entry_i = self._entry_index_for_row(row)
+        if entry_i is None:
+            return
+        next_i = (entry_i + 1) % len(self._filtered)
+
+        if self._tiered and next_i != 0:
+            cur_tier = self._filtered[entry_i].get("priority")
+            next_tier = self._filtered[next_i].get("priority")
+            if next_tier != cur_tier:
+                self._show_checkpoint(cur_tier, next_tier, next_i)
+                return
+
+        self.list_widget.setCurrentRow(self._row_for_entry_index(next_i))
+
+    def _show_checkpoint(self, done_tier: str, next_tier: str, next_entry_i: int) -> None:
+        self._pending_tier = next_entry_i
+        self.checkpoint_headline.setText(translator.t("mashallah"))
+        self.checkpoint_done_msg.setText(translator.t("completed_tier_message", tier=self._tier_title(done_tier)))
+        self.checkpoint_next_msg.setText(translator.t("now_starting_tier", tier=self._tier_title(next_tier)))
+        self.checkpoint_continue_btn.setText(translator.t("continue_btn"))
+        self.right_stack.setCurrentWidget(self.checkpoint_card)
+
+    def _continue_after_checkpoint(self) -> None:
+        if self._pending_tier is not None:
+            self.list_widget.setCurrentRow(self._row_for_entry_index(self._pending_tier))
+            self._pending_tier = None
 
     def apply_font(self, family: str) -> None:
-        f = self.arabic_label.font()
-        f.setFamily(family)
-        f.setPointSize(16)
-        self.arabic_label.setFont(f)
+        set_arabic_font(self.arabic_label, family, size_px=21)
 
     def retranslate(self) -> None:
         self.search.setPlaceholderText(translator.t("search"))

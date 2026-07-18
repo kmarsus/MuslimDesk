@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (QCheckBox, QHBoxLayout, QLabel, QLineEdit,
 from app.i18n import translator
 from app.paths import data_path
 from app.settings import settings
+from app.ui.widgets.arabic_font import set_arabic_font
 from app.ui.widgets.card import Card
 
 RECITATION_CDN = "https://cdn.islamic.network/quran/audio/128/ar.alafasy/{n}.mp3"
@@ -23,6 +24,7 @@ class QuranView(QWidget):
         self._filtered = self._index
         self._current_surah: int | None = None
         self._current_data: dict | None = None
+        self._font_family = settings.arabic_font
 
         self._player = QMediaPlayer(self)
         self._audio_out = QAudioOutput(self)
@@ -58,7 +60,7 @@ class QuranView(QWidget):
         self.search.textChanged.connect(self._filter)
         list_layout.addWidget(self.search)
         self.surah_list = QListWidget()
-        self.surah_list.itemActivated.connect(self._open_from_item)
+        self.surah_list.itemClicked.connect(self._open_from_item)
         list_layout.addWidget(self.surah_list)
         self.stack.addWidget(list_page)
 
@@ -74,9 +76,9 @@ class QuranView(QWidget):
         self.surah_title_label.setObjectName("SectionTitle")
         top_row.addWidget(self.surah_title_label)
         top_row.addStretch(1)
-        self.bookmark_btn = QPushButton("☆")
+        self.bookmark_btn = QPushButton()
         self.bookmark_btn.setObjectName("Ghost")
-        self.bookmark_btn.setFixedWidth(40)
+        self.bookmark_btn.setCheckable(True)
         self.bookmark_btn.clicked.connect(self._toggle_bookmark)
         top_row.addWidget(self.bookmark_btn)
         reader_layout.addLayout(top_row)
@@ -164,7 +166,8 @@ class QuranView(QWidget):
 
     def _update_bookmark_icon(self) -> None:
         is_bookmarked = self._current_surah is not None and settings.bookmark_surah == self._current_surah
-        self.bookmark_btn.setText("★" if is_bookmarked else "☆")
+        self.bookmark_btn.setChecked(is_bookmarked)
+        self.bookmark_btn.setText(translator.t("bookmarked") if is_bookmarked else translator.t("bookmark"))
 
     def _toggle_bookmark(self) -> None:
         if self._current_surah is None:
@@ -224,9 +227,8 @@ class QuranView(QWidget):
             top.addWidget(num)
             top.addStretch(1)
             global_n = first_global + ayah["n"] - 1
-            play_btn = QPushButton("▶")
+            play_btn = QPushButton(translator.t("play"))
             play_btn.setObjectName("Ghost")
-            play_btn.setFixedWidth(36)
             play_btn.clicked.connect(lambda _=False, g=global_n: self._play_from(g))
             top.addWidget(play_btn)
             card.addLayout(top)
@@ -238,10 +240,7 @@ class QuranView(QWidget):
                 arabic.setWordWrap(True)
                 arabic.setAlignment(Qt.AlignmentFlag.AlignRight)
                 arabic.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
-                f = arabic.font()
-                f.setFamily(settings.arabic_font)
-                f.setPointSize(17)
-                arabic.setFont(f)
+                set_arabic_font(arabic, self._font_family, size_px=24)
                 card.addWidget(arabic)
             if show_tr:
                 bn = QLabel(ayah.get("bn", ""))
@@ -263,10 +262,7 @@ class QuranView(QWidget):
             arabic.setWordWrap(True)
             arabic.setAlignment(Qt.AlignmentFlag.AlignRight)
             arabic.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
-            f = arabic.font()
-            f.setFamily(settings.arabic_font)
-            f.setPointSize(17)
-            arabic.setFont(f)
+            set_arabic_font(arabic, self._font_family, size_px=24)
             card.addWidget(arabic)
             self.ayah_layout.addWidget(card)
 
@@ -298,7 +294,7 @@ class QuranView(QWidget):
 
     def _highlight_playing(self) -> None:
         for global_n, btn in self._play_buttons.items():
-            btn.setText("⏸" if global_n == self._playing_global_ayah else "▶")
+            btn.setText(translator.t("pause") if global_n == self._playing_global_ayah else translator.t("play"))
 
     def _on_media_status_changed(self, status) -> None:
         if status == QMediaPlayer.MediaStatus.EndOfMedia and self._playing_global_ayah is not None:
@@ -314,13 +310,15 @@ class QuranView(QWidget):
                 self._stop_playback()
 
     def apply_font(self, family: str) -> None:
+        self._font_family = family
         self._render_ayahs()
 
     def retranslate(self) -> None:
         self.heading.setText(translator.t("nav_quran"))
         self.continue_btn.setText(f"▶ {translator.t('continue_reading')}")
-        self.bookmark_go_btn.setText("★ " + translator.t("go_to_bookmark"))
+        self.bookmark_go_btn.setText(translator.t("go_to_bookmark"))
         self.bookmark_go_btn.setVisible(bool(settings.bookmark_surah))
+        self._update_bookmark_icon()
         self.search.setPlaceholderText(translator.t("search"))
         self.back_btn.setText("← " + translator.t("surah_list"))
         self.arabic_checkbox.setText(translator.t("arabic_text"))

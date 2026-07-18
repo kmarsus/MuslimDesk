@@ -8,11 +8,21 @@ from PySide6.QtWidgets import (QGridLayout, QHBoxLayout, QLabel, QListWidget,
 from app.hijri import HijriCalendarService, month_name
 from app.i18n import translator
 from app.settings import settings
-from app.ui.widgets.no_scroll import NoScrollSpinBox
 from app.ui.widgets.card import Card
+from app.ui.widgets.no_scroll import NoScrollSpinBox
 
 _WEEKDAY_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 _WEEKDAY_BN = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"]
+_FRIDAY_COL = 5     # weekly holiday in Bangladesh
+_SIYAM_COLS = (1, 4)  # Monday & Thursday -- recommended (sunnah) voluntary fasting days
+
+_GRID_BORDER = "#E5EEF7"
+_TODAY_BG = "#42A866"
+_HOLIDAY_BG = "#FDEAE4"
+_HOLIDAY_FG = "#C1503A"
+_SIYAM_BG = "#FFF3D6"
+_SIYAM_FG = "#8A6414"
+_EVENT_FG = "#FF8B73"
 
 
 class HijriView(QWidget):
@@ -57,11 +67,25 @@ class HijriView(QWidget):
         nav_row.addWidget(self.today_btn)
         layout.addLayout(nav_row)
 
-        self.grid_card = Card()
+        self.grid_card = Card(margins=1, spacing=0)
         self.grid = QGridLayout()
-        self.grid.setSpacing(4)
+        self.grid.setSpacing(0)
+        self.grid.setContentsMargins(0, 0, 0, 0)
         self.grid_card.addLayout(self.grid)
         layout.addWidget(self.grid_card)
+
+        legend_row = QHBoxLayout()
+        self.legend_holiday = QLabel()
+        self.legend_holiday.setStyleSheet(f"color: {_HOLIDAY_FG}; font-size: 10px; font-weight: 700;")
+        self.legend_siyam = QLabel()
+        self.legend_siyam.setStyleSheet(f"color: {_SIYAM_FG}; font-size: 10px; font-weight: 700;")
+        self.legend_event = QLabel()
+        self.legend_event.setStyleSheet(f"color: {_EVENT_FG}; font-size: 10px; font-weight: 700;")
+        legend_row.addWidget(self.legend_holiday)
+        legend_row.addWidget(self.legend_siyam)
+        legend_row.addWidget(self.legend_event)
+        legend_row.addStretch(1)
+        layout.addLayout(legend_row)
 
         offset_row = QHBoxLayout()
         self.offset_label = QLabel()
@@ -119,8 +143,15 @@ class HijriView(QWidget):
 
         for col, wd in enumerate(weekday_names):
             lbl = QLabel(wd)
-            lbl.setObjectName("Muted")
             lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            lbl.setMinimumSize(52, 30)
+            border = f"border: 1px solid {_GRID_BORDER};"
+            if col == _FRIDAY_COL:
+                lbl.setStyleSheet(f"background-color: {_HOLIDAY_BG}; color: {_HOLIDAY_FG}; font-weight: 800; {border}")
+            elif col in _SIYAM_COLS:
+                lbl.setStyleSheet(f"background-color: {_SIYAM_BG}; color: {_SIYAM_FG}; font-weight: 800; {border}")
+            else:
+                lbl.setStyleSheet(f"font-weight: 800; {border}")
             self.grid.addWidget(lbl, 0, col)
 
         first_weekday = self._svc.weekday_of_first_day(self._view_year, self._view_month, settings.hijri_offset)
@@ -131,15 +162,38 @@ class HijriView(QWidget):
         for day in range(1, days_in_month + 1):
             events = self._svc.events_on(self._view_month, day)
             is_today = (self._view_year == today.year and self._view_month == today.month and day == today.day)
-            cell = QLabel(str(day) + (" •" if events else ""))
-            cell.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            cell.setMinimumHeight(32)
-            if is_today:
-                cell.setStyleSheet("background-color: #42A866; color: white; border-radius: 8px; font-weight: 800;")
-            elif events:
-                cell.setStyleSheet("color: #FF8B73; font-weight: 800;")
+            is_friday = col == _FRIDAY_COL
+            is_siyam = col in _SIYAM_COLS
+
+            text = str(day)
             if events:
-                cell.setToolTip(", ".join(e.name(english) for e in events))
+                text += "\n●"
+            elif is_siyam:
+                text += "\n" + translator.t("siyam_short")
+
+            cell = QLabel(text)
+            cell.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            cell.setMinimumSize(52, 44)
+
+            if is_today:
+                style = f"background-color: {_TODAY_BG}; color: white; font-weight: 800;"
+            elif is_friday:
+                style = f"background-color: {_HOLIDAY_BG}; color: {_HOLIDAY_FG}; font-weight: 700;"
+            elif is_siyam:
+                style = f"background-color: {_SIYAM_BG}; color: {_SIYAM_FG}; font-weight: 700;"
+            else:
+                style = "background-color: transparent;"
+            if events and not is_today:
+                style += f" color: {_EVENT_FG}; font-weight: 800;"
+            style += f" border: 1px solid {_GRID_BORDER};"
+            cell.setStyleSheet(style)
+
+            tooltip_parts = [e.name(english) for e in events]
+            if is_siyam and not events:
+                tooltip_parts.append(translator.t("siyam_tooltip"))
+            if tooltip_parts:
+                cell.setToolTip(", ".join(tooltip_parts))
+
             self.grid.addWidget(cell, row, col)
             col += 1
             if col > 6:
@@ -159,4 +213,7 @@ class HijriView(QWidget):
         self.today_btn.setText(translator.t("hijri_today"))
         self.offset_label.setText(translator.t("hijri_offset_label"))
         self.upcoming_title.setText(translator.t("upcoming_events"))
+        self.legend_holiday.setText("🟥 " + translator.t("legend_holiday"))
+        self.legend_siyam.setText("🟨 " + translator.t("legend_siyam"))
+        self.legend_event.setText("● " + translator.t("legend_event"))
         self._refresh()

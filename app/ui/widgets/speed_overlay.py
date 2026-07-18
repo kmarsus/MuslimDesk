@@ -5,7 +5,9 @@ calls unchanged.
 """
 from __future__ import annotations
 
+import ctypes
 import time
+from ctypes import wintypes
 
 from PySide6.QtCore import QPoint, Qt, QTimer
 from PySide6.QtGui import QAction, QMouseEvent
@@ -16,6 +18,28 @@ from app.network_speed import NetworkCounters, default_position, format_rate, ta
 WINDOW_WIDTH = 128
 WINDOW_HEIGHT = 40
 UPDATE_MS = 1000
+
+_HWND_TOPMOST = -1
+_SWP_NOMOVE = 0x0002
+_SWP_NOSIZE = 0x0001
+_SWP_NOACTIVATE = 0x0010
+
+
+def _force_topmost(hwnd: int) -> None:
+    """Windows' own taskbar is itself a topmost shell window and can silently
+    win the z-order fight against a plain WindowStaysOnTopHint widget --
+    without this repeated reassertion (which the original SpeedTray.pyw also
+    needed) the overlay can end up invisible behind the taskbar."""
+    try:
+        user32 = ctypes.WinDLL("user32", use_last_error=True)
+        set_window_pos = user32.SetWindowPos
+        set_window_pos.argtypes = [wintypes.HWND, wintypes.HWND, ctypes.c_int, ctypes.c_int,
+                                    ctypes.c_int, ctypes.c_int, wintypes.UINT]
+        set_window_pos.restype = wintypes.BOOL
+        set_window_pos(hwnd, wintypes.HWND(_HWND_TOPMOST), 0, 0, 0, 0,
+                       _SWP_NOMOVE | _SWP_NOSIZE | _SWP_NOACTIVATE)
+    except OSError:
+        pass
 
 
 class SpeedOverlay(QWidget):
@@ -63,7 +87,18 @@ class SpeedOverlay(QWidget):
         self._theme_timer.timeout.connect(self._refresh_theme)
         self._theme_timer.start(3000)
 
+        self._topmost_timer = QTimer(self)
+        self._topmost_timer.timeout.connect(self._reassert_topmost)
+        self._topmost_timer.start(2000)
+
         self.reset_position()
+
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        self._reassert_topmost()
+
+    def _reassert_topmost(self) -> None:
+        _force_topmost(int(self.winId()))
 
     def _apply_colors(self) -> None:
         self.setStyleSheet(
@@ -78,8 +113,14 @@ class SpeedOverlay(QWidget):
             self._apply_colors()
 
     def reset_position(self) -> None:
-        x, y = default_position(WINDOW_WIDTH, WINDOW_HEIGHT)
-        self.move(x, y)
+        # GetWindowRect (used to locate the taskbar) always returns physical
+        # pixels, but QWidget.move() operates in Qt's logical/DPI-scaled
+        # coordinate space -- on a scaled display (125%, 150%, ...) those are
+        # different units. Do the whole search in physical pixels, then
+        # convert the result back down to logical pixels for move().
+        ratio = self.screen().devicePixelRatio() if self.screen() else 1.0
+        x, y = default_position(round(WINDOW_WIDTH * ratio), round(WINDOW_HEIGHT * ratio))
+        self.move(round(x / ratio), round(y / ratio))
 
     def _update_speed(self) -> None:
         try:

@@ -192,6 +192,16 @@ class Settings:
         self._set("fajr_azan_voice_id", v)
 
     @property
+    def default_alarm_sound(self) -> str:
+        """Applied to newly-created alarms; separate from azan_voice_id --
+        alarms use simple beep tones by default, not reciter voices."""
+        return self._get("default_alarm_sound", "beep_classic")
+
+    @default_alarm_sound.setter
+    def default_alarm_sound(self, v: str) -> None:
+        self._set("default_alarm_sound", v)
+
+    @property
     def azan_volume(self) -> int:
         return self._get("azan_volume", 80)
 
@@ -265,6 +275,30 @@ class Settings:
     @show_speed_tray.setter
     def show_speed_tray(self, v: bool) -> None:
         self._set("show_speed_tray", v)
+
+    @property
+    def show_clock_overlay(self) -> bool:
+        return self._get("show_clock_overlay", False)
+
+    @show_clock_overlay.setter
+    def show_clock_overlay(self, v: bool) -> None:
+        self._set("show_clock_overlay", v)
+
+    @property
+    def clock_overlay_pos_x(self) -> int:
+        return self._get("clock_overlay_pos_x", -1)
+
+    @clock_overlay_pos_x.setter
+    def clock_overlay_pos_x(self, v: int) -> None:
+        self._set("clock_overlay_pos_x", v)
+
+    @property
+    def clock_overlay_pos_y(self) -> int:
+        return self._get("clock_overlay_pos_y", -1)
+
+    @clock_overlay_pos_y.setter
+    def clock_overlay_pos_y(self, v: int) -> None:
+        self._set("clock_overlay_pos_y", v)
 
     @property
     def start_minimized(self) -> bool:

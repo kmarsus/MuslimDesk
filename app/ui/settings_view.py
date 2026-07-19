@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QCheckBox, QGridLayout, QHBoxLayout, QLabel,
                                 QLineEdit, QPushButton, QScrollArea,
                                 QVBoxLayout, QWidget)
 
-from app import azan_voices
+from app import alarm_sounds, azan_voices
 from app.i18n import translator
 from app.location import cities_for_country, country_list
 from app.prayer_times import CALC_METHODS
@@ -21,12 +21,14 @@ SYSTEM_DEFAULT_FONT_LABEL = "System Default"
 class SettingsView(QWidget):
     def __init__(self, scheduler, on_theme_changed, on_font_changed, available_fonts: list[str],
                  on_speed_tray_changed=None, voice_clock=None,
-                 available_ui_fonts: list[str] | None = None, on_ui_font_changed=None, parent=None) -> None:
+                 available_ui_fonts: list[str] | None = None, on_ui_font_changed=None,
+                 on_clock_overlay_changed=None, parent=None) -> None:
         super().__init__(parent)
         self._scheduler = scheduler
         self._on_theme_changed = on_theme_changed
         self._on_font_changed = on_font_changed
         self._on_speed_tray_changed = on_speed_tray_changed
+        self._on_clock_overlay_changed = on_clock_overlay_changed
         self._voice_clock = voice_clock
         self._on_ui_font_changed = on_ui_font_changed
         self._available_fonts = [SYSTEM_DEFAULT_FONT_LABEL] + (available_fonts or ["Amiri"])
@@ -54,6 +56,7 @@ class SettingsView(QWidget):
         self._build_adjustment_card()
         self._build_azan_card()
         self._build_azan_behavior_card()
+        self._build_alarm_sound_card()
         self._layout.addStretch(1)
 
         translator.language_changed.connect(lambda *_: self.retranslate())
@@ -128,6 +131,14 @@ class SettingsView(QWidget):
         speed_row.addStretch(1)
         self.general_card.addLayout(speed_row)
 
+        clock_overlay_row = QHBoxLayout()
+        self.clock_overlay_checkbox = QCheckBox()
+        self.clock_overlay_checkbox.setChecked(settings.show_clock_overlay)
+        self.clock_overlay_checkbox.toggled.connect(self._on_clock_overlay_toggled)
+        clock_overlay_row.addWidget(self.clock_overlay_checkbox)
+        clock_overlay_row.addStretch(1)
+        self.general_card.addLayout(clock_overlay_row)
+
         self._layout.addWidget(self.general_card)
 
     def _on_lang_changed(self, _idx: int) -> None:
@@ -155,6 +166,20 @@ class SettingsView(QWidget):
         settings.show_speed_tray = checked
         if self._on_speed_tray_changed is not None:
             self._on_speed_tray_changed(checked)
+
+    def _on_clock_overlay_toggled(self, checked: bool) -> None:
+        settings.show_clock_overlay = checked
+        if self._on_clock_overlay_changed is not None:
+            self._on_clock_overlay_changed(checked)
+
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        # the overlay can be closed via its own X button while Settings isn't
+        # visible, so resync the checkbox from the persisted setting each time
+        # this page is shown rather than only reading it once at construction
+        self.clock_overlay_checkbox.blockSignals(True)
+        self.clock_overlay_checkbox.setChecked(settings.show_clock_overlay)
+        self.clock_overlay_checkbox.blockSignals(False)
 
     # ── voice clock ──────────────────────────────────────────────────
     def _build_voice_clock_card(self) -> None:
@@ -544,6 +569,36 @@ class SettingsView(QWidget):
     def _on_close_delay_changed(self, v: int) -> None:
         settings.close_browsers_delay_sec = v
 
+    # ── default alarm sound ──────────────────────────────────────────
+    def _build_alarm_sound_card(self) -> None:
+        self.alarm_sound_card = Card()
+        self.alarm_sound_title = QLabel()
+        self.alarm_sound_title.setObjectName("SectionTitle")
+        self.alarm_sound_card.addWidget(self.alarm_sound_title)
+
+        row = QHBoxLayout()
+        self.alarm_sound_combo = VoicePickerCombo(alarm_sounds.ALL, settings.default_alarm_sound)
+        self.alarm_sound_combo.voice_changed.connect(self._on_alarm_sound_changed)
+        row.addWidget(self.alarm_sound_combo, 1)
+
+        self.alarm_sound_preview_btn = QPushButton(translator.t("preview"))
+        self.alarm_sound_preview_btn.clicked.connect(self._preview_alarm_sound)
+        row.addWidget(self.alarm_sound_preview_btn)
+
+        self.alarm_sound_stop_btn = QPushButton(translator.t("stop"))
+        self.alarm_sound_stop_btn.setObjectName("Ghost")
+        self.alarm_sound_stop_btn.clicked.connect(self._stop_preview)
+        row.addWidget(self.alarm_sound_stop_btn)
+
+        self.alarm_sound_card.addLayout(row)
+        self._layout.addWidget(self.alarm_sound_card)
+
+    def _on_alarm_sound_changed(self, sound_id: str) -> None:
+        settings.default_alarm_sound = sound_id
+
+    def _preview_alarm_sound(self) -> None:
+        self._scheduler.preview_path(alarm_sounds.resolve_path(self.alarm_sound_combo.current_voice_id()))
+
     # ── i18n ──────────────────────────────────────────────────────────
     def retranslate(self) -> None:
         self.heading.setText(translator.t("nav_settings"))
@@ -553,6 +608,7 @@ class SettingsView(QWidget):
         self.ui_font_title.setText(translator.t("ui_font"))
         self.minimize_checkbox.setText(translator.t("start_minimized"))
         self.speed_tray_checkbox.setText(translator.t("show_speed_tray"))
+        self.clock_overlay_checkbox.setText(translator.t("show_clock_overlay"))
 
         self.voice_clock_title.setText(translator.t("voice_clock"))
         self.voice_clock_checkbox.setText(translator.t("voice_clock_enable"))
@@ -591,3 +647,7 @@ class SettingsView(QWidget):
         self.close_browsers_checkbox.setText(translator.t("close_browsers_on_azan"))
         self.close_browsers_caption.setText(translator.t("close_browsers_caption"))
         self.close_delay_label.setText(translator.t("close_browsers_delay"))
+
+        self.alarm_sound_title.setText(translator.t("default_alarm_sound"))
+        self.alarm_sound_preview_btn.setText(translator.t("preview"))
+        self.alarm_sound_stop_btn.setText(translator.t("stop"))

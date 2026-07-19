@@ -12,7 +12,7 @@ from PySide6.QtCore import QTimer, Qt, QUrl
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
 from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout
 
-from app import azan_voices
+from app import alarm_sounds
 from app.alarms import Alarm
 from app.i18n import translator
 
@@ -36,7 +36,7 @@ class AlarmRingDialog(QDialog):
         title.setStyleSheet("font-size: 20px; font-weight: 800;")
         layout.addWidget(title)
 
-        time_label = QLabel(alarm.time)
+        time_label = QLabel(alarm.time_12h)
         time_label.setStyleSheet("font-size: 40px; font-weight: 800;")
         layout.addWidget(time_label)
 
@@ -60,7 +60,7 @@ class AlarmRingDialog(QDialog):
         self._audio_out = QAudioOutput(self)
         self._player.setAudioOutput(self._audio_out)
         self._player.setLoops(QMediaPlayer.Loops.Infinite)
-        self._player.setSource(QUrl.fromLocalFile(azan_voices.resolve_path(alarm.voice_id)))
+        self._player.setSource(QUrl.fromLocalFile(alarm_sounds.resolve_path(alarm.voice_id)))
         self._player.play()
 
         if alarm.shutdown_on_ring:

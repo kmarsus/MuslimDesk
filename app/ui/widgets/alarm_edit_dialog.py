@@ -4,9 +4,10 @@ from PySide6.QtCore import QTime
 from PySide6.QtWidgets import (QCheckBox, QDialog, QHBoxLayout, QLabel,
                                 QLineEdit, QPushButton, QVBoxLayout)
 
-from app import azan_voices
+from app import alarm_sounds
 from app.alarms import WEEKDAY_LABELS_BN, WEEKDAY_LABELS_EN, Alarm
 from app.i18n import translator
+from app.settings import settings
 from app.ui.widgets.no_scroll import NoScrollSpinBox, NoScrollTimeEdit
 from app.ui.widgets.voice_picker import VoicePickerCombo
 
@@ -14,7 +15,7 @@ from app.ui.widgets.voice_picker import VoicePickerCombo
 class AlarmEditDialog(QDialog):
     def __init__(self, alarm: Alarm | None = None, parent=None) -> None:
         super().__init__(parent)
-        self._alarm = alarm or Alarm()
+        self._alarm = alarm or Alarm(voice_id=settings.default_alarm_sound)
         self.setWindowTitle(translator.t("edit_alarm"))
         self.setMinimumWidth(360)
 
@@ -24,7 +25,7 @@ class AlarmEditDialog(QDialog):
         time_row = QHBoxLayout()
         time_row.addWidget(QLabel(translator.t("alarm_time")))
         self.time_edit = NoScrollTimeEdit()
-        self.time_edit.setDisplayFormat("HH:mm")
+        self.time_edit.setDisplayFormat("hh:mm AP")
         h, m = (int(x) for x in self._alarm.time.split(":"))
         self.time_edit.setTime(QTime(h, m))
         time_row.addWidget(self.time_edit)
@@ -53,7 +54,7 @@ class AlarmEditDialog(QDialog):
 
         sound_row = QHBoxLayout()
         sound_row.addWidget(QLabel(translator.t("alarm_sound")))
-        self.sound_combo = VoicePickerCombo(azan_voices.REGULAR, self._alarm.voice_id)
+        self.sound_combo = VoicePickerCombo(alarm_sounds.ALL, self._alarm.voice_id)
         sound_row.addWidget(self.sound_combo, 1)
         layout.addLayout(sound_row)
 

@@ -24,13 +24,21 @@ class Alarm:
     label: str = ""
     enabled: bool = True
     weekdays: list[int] = field(default_factory=list)  # 0=Mon..6=Sun; empty = every day
-    voice_id: str = "makkah"
+    voice_id: str = "beep_classic"
     shutdown_on_ring: bool = False
     shutdown_delay_sec: int = 60
 
     def repeats_today(self, python_weekday: int) -> bool:
         """python_weekday: date.weekday() convention, 0=Monday..6=Sunday."""
         return not self.weekdays or python_weekday in self.weekdays
+
+    @property
+    def time_12h(self) -> str:
+        """self.time is stored as 24h "HH:MM"; display it as 12h with AM/PM."""
+        hour, minute = (int(x) for x in self.time.split(":"))
+        period = "AM" if hour < 12 else "PM"
+        hour12 = hour % 12 or 12
+        return f"{hour12:02d}:{minute:02d} {period}"
 
 
 def load_alarms() -> list[Alarm]:

@@ -82,7 +82,7 @@ class AlarmView(QWidget):
         for alarm in alarms:
             card = Card(margins=14, spacing=4)
             top_row = QHBoxLayout()
-            time_label = QLabel(alarm.time)
+            time_label = QLabel(alarm.time_12h)
             time_label.setStyleSheet("font-size: 22px; font-weight: 800;")
             top_row.addWidget(time_label)
             top_row.addStretch(1)

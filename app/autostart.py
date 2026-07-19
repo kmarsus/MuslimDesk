@@ -8,7 +8,7 @@ import winreg
 from pathlib import Path
 
 APP_NAME = "MuslimDesk"
-APP_VERSION = "1.0.8"
+APP_VERSION = "1.0.9"
 _RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 _UNINSTALL_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\MuslimDesk"
 

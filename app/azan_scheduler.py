@@ -81,6 +81,11 @@ class AzanScheduler(QObject):
         if self._tray_icon is not None:
             self._tray_icon.showMessage(translator.t("app_title"), translator.t("preview"))
 
+    def preview_path(self, path: str) -> None:
+        """Generic preview playback for sounds outside the azan_voices
+        catalog (e.g. alarm sounds) -- reuses the same player/volume."""
+        self._play_path(path)
+
     def stop_preview(self) -> None:
         self._player.stop()
 

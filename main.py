@@ -23,6 +23,7 @@ from app.single_instance import start_server, try_signal_existing_instance
 from app.ui.main_window import MainWindow
 from app.ui.widgets.alarm_ring_dialog import AlarmRingDialog
 from app.ui.widgets.azan_notification_dialog import AzanNotificationDialog
+from app.ui.widgets.clock_overlay import ClockOverlay
 from app.ui.widgets.speed_overlay import SpeedOverlay
 from app.voice_clock import VoiceClock
 
@@ -128,13 +129,33 @@ def main() -> int:
             _speed_overlay.stop()
             _speed_overlay = None
 
+    _clock_overlay: ClockOverlay | None = None
+
+    def _set_clock_overlay_visible(enabled: bool) -> None:
+        nonlocal _clock_overlay
+        if enabled:
+            if _clock_overlay is None:
+                _clock_overlay = ClockOverlay()
+                _clock_overlay.closed.connect(_on_clock_overlay_closed)
+            _clock_overlay.show()
+        elif _clock_overlay is not None:
+            _clock_overlay.stop()
+            _clock_overlay = None
+
+    def _on_clock_overlay_closed() -> None:
+        nonlocal _clock_overlay
+        _clock_overlay = None
+
     window = MainWindow(scheduler, alarm_manager, available_arabic_fonts, available_ui_fonts,
-                         on_speed_tray_changed=_set_speed_tray_visible, voice_clock=voice_clock)
+                         on_speed_tray_changed=_set_speed_tray_visible, voice_clock=voice_clock,
+                         on_clock_overlay_changed=_set_clock_overlay_visible)
 
     _instance_server = start_server(lambda: (window.show(), window.raise_(), window.activateWindow()))
 
     if settings.show_speed_tray:
         _set_speed_tray_visible(True)
+    if settings.show_clock_overlay:
+        _set_clock_overlay_visible(True)
 
     _ring_dialogs: list[AlarmRingDialog] = []
 

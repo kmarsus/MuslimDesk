@@ -3,16 +3,17 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QFileDialog
 
-from app import azan_voices
 from app.custom_sounds import UPLOAD_SENTINEL, add_custom_sound, load_custom_sounds
 from app.i18n import translator
 from app.ui.widgets.no_scroll import NoScrollComboBox
 
 
 class VoicePickerCombo(NoScrollComboBox):
+    """Bundled entries just need .id and .label_en -- works for both
+    azan_voices.AzanVoice and alarm_sounds.AlarmSound catalogs."""
     voice_changed = Signal(str)  # voice id, never the upload sentinel
 
-    def __init__(self, bundled: list[azan_voices.AzanVoice], current_id: str, parent=None) -> None:
+    def __init__(self, bundled: list, current_id: str, parent=None) -> None:
         super().__init__(parent)
         self._bundled = bundled
         self._current_id = current_id

@@ -23,6 +23,8 @@ NAV_ITEMS = [
     ("mosques", "nav_mosques", "🕌"),
     ("tasbih", "nav_tasbih", "☪"),
     ("alarm", "nav_alarm", "⏰"),
+    ("whiteboard", "nav_whiteboard", "🖊"),
+    ("pc_clean", "nav_pc_clean", "🧹"),
     ("settings", "nav_settings", "⚙"),
     ("about", "nav_about", "ℹ"),
 ]
@@ -31,11 +33,13 @@ NAV_ITEMS = [
 class MainWindow(QMainWindow):
     def __init__(self, scheduler, alarm_manager, available_arabic_fonts: list[str],
                  available_ui_fonts: list[str] | None = None,
-                 on_speed_tray_changed=None, voice_clock=None) -> None:
+                 on_speed_tray_changed=None, voice_clock=None,
+                 on_clock_overlay_changed=None) -> None:
         super().__init__()
         self._scheduler = scheduler
         self._alarm_manager = alarm_manager
         self._on_speed_tray_changed = on_speed_tray_changed
+        self._on_clock_overlay_changed = on_clock_overlay_changed
         self._voice_clock = voice_clock
         self._available_arabic_fonts = available_arabic_fonts
         self._available_ui_fonts = available_ui_fonts or ["Segoe UI"]
@@ -70,6 +74,7 @@ class MainWindow(QMainWindow):
 
     def _build_sidebar(self, root: QHBoxLayout) -> None:
         sidebar = QWidget()
+        self.sidebar = sidebar
         sidebar.setObjectName("Sidebar")
         sidebar.setFixedWidth(220)
         layout = QVBoxLayout(sidebar)
@@ -150,7 +155,16 @@ class MainWindow(QMainWindow):
                 self._scheduler, self.apply_theme, self.apply_arabic_font,
                 self._available_arabic_fonts, self._on_speed_tray_changed, self._voice_clock,
                 available_ui_fonts=self._available_ui_fonts, on_ui_font_changed=self.apply_ui_font,
+                on_clock_overlay_changed=self._on_clock_overlay_changed,
             )
+
+        def make_whiteboard():
+            from app.ui.whiteboard_view import WhiteboardView
+            return WhiteboardView(on_fullscreen_changed=self.set_whiteboard_fullscreen)
+
+        def make_pc_clean():
+            from app.ui.pc_clean_view import PcCleanView
+            return PcCleanView()
 
         def make_about():
             from app.ui.about_view import AboutView
@@ -167,6 +181,8 @@ class MainWindow(QMainWindow):
             "mosques": make_mosques,
             "tasbih": make_tasbih,
             "alarm": make_alarm,
+            "whiteboard": make_whiteboard,
+            "pc_clean": make_pc_clean,
             "settings": make_settings,
             "about": make_about,
         }
@@ -227,6 +243,27 @@ class MainWindow(QMainWindow):
         for route, key, emoji in NAV_ITEMS:
             self._nav_buttons[route].setText(f"  {emoji}   {translator.t(key)}")
         self.footer_label.setText(translator.t("developed_by"))
+
+    def set_whiteboard_fullscreen(self, enabled: bool) -> None:
+        """Hides the sidebar and expands the window so only the whiteboard's
+        own toolbar and canvas are visible -- lets a teacher use the full
+        screen for drawing while presenting."""
+        self._whiteboard_fullscreen = enabled
+        self.sidebar.setVisible(not enabled)
+        if enabled:
+            self.showFullScreen()
+        else:
+            self.showNormal()
+
+    def keyPressEvent(self, event) -> None:
+        if event.key() == Qt.Key.Key_Escape and getattr(self, "_whiteboard_fullscreen", False):
+            page = self._pages.get("whiteboard")
+            if page is not None and hasattr(page, "exit_fullscreen"):
+                page.exit_fullscreen()
+            else:
+                self.set_whiteboard_fullscreen(False)
+            return
+        super().keyPressEvent(event)
 
     def closeEvent(self, event) -> None:
         event.ignore()

@@ -8,7 +8,7 @@ from app.i18n import translator
 from app.paths import icon_path
 from app.ui.widgets.card import Card
 
-APP_VERSION = "1.0.6"
+APP_VERSION = "1.0.7"
 REPO_URL = "https://github.com/kmarsus/MuslimDesk"
 
 

@@ -84,6 +84,13 @@ class AzanScheduler(QObject):
     def stop_preview(self) -> None:
         self._player.stop()
 
+    def set_live_volume(self, percent: int) -> None:
+        """Adjusts the volume of whatever is currently playing without
+        touching the persisted azan_volume setting -- the next azan (or
+        preview) still starts at the configured volume, since _play_path()
+        re-reads settings.azan_volume every time it plays something."""
+        self._audio_out.setVolume(max(0, min(100, percent)) / 100.0)
+
     def _play_path(self, path: str) -> None:
         self._audio_out.setVolume(max(0, min(100, settings.azan_volume)) / 100.0)
         self._player.setSource(QUrl.fromLocalFile(path))

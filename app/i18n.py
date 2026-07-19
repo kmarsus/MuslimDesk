@@ -200,6 +200,8 @@ _STRINGS: dict[str, dict[str, str]] = {
               "আর যদি নামাজ নষ্ট হয়, তবে সব কাজই নষ্ট হবে।",
     },
     "azan_hadith_ref": {"en": "Sunan al-Tirmidhi, Hadith 413", "bn": "সুনানে তিরমিজি, হাদিস: ৪১৩"},
+    "azan_volume_temp_hint": {"en": "Adjusts volume for this Azan only -- resets to full next time",
+                               "bn": "শুধু এই আজানের জন্য ভলিউম পরিবর্তন করবে -- পরের আজানে আবার পূর্ণ ভলিউমে ফিরে যাবে"},
     "azan_message_label": {"en": "Azan reminder message", "bn": "আজানের রিমাইন্ডার বার্তা"},
     "reset_default": {"en": "Reset to default", "bn": "ডিফল্টে ফিরুন"},
     "minimize": {"en": "Minimize", "bn": "মিনিমাইজ"},

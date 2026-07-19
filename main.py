@@ -17,7 +17,6 @@ from app.autostart import (ensure_autostart_registered,
                             remove_windows_integration)
 from app.azan_scheduler import AzanScheduler
 from app.i18n import translator
-from app.installer import ensure_installed_and_relaunch, schedule_install_dir_deletion
 from app.paths import assets_root, icon_path
 from app.settings import settings
 from app.single_instance import start_server, try_signal_existing_instance
@@ -80,13 +79,12 @@ def _run_uninstall() -> int:
     """Entry point for Apps & Features -> Uninstall (registered as
     `"<exe>" --uninstall` in ensure_uninstall_entry_registered())."""
     remove_windows_integration()
-    schedule_install_dir_deletion()
     app = QApplication(sys.argv)
     QMessageBox.information(
         None, "MuslimDesk",
         "MuslimDesk has been uninstalled: it will no longer start with Windows "
-        "and has been removed from Apps & Features. The installed files will "
-        "be deleted in a moment.",
+        "and has been removed from Apps & Features.\n\n"
+        "You can now delete MuslimDesk.exe.",
     )
     return 0
 
@@ -101,8 +99,6 @@ def main() -> int:
 
     if try_signal_existing_instance():
         return 0
-
-    ensure_installed_and_relaunch()
 
     ensure_autostart_registered()
     ensure_uninstall_entry_registered()
@@ -160,7 +156,7 @@ def main() -> int:
         window.show()
         window.raise_()
         window.activateWindow()
-        dialog = AzanNotificationDialog(prayer_key, parent=window)
+        dialog = AzanNotificationDialog(prayer_key, scheduler, parent=window)
         _azan_dialogs.append(dialog)
         dialog.finished.connect(lambda *_: _azan_dialogs.remove(dialog) if dialog in _azan_dialogs else None)
         dialog.show()

@@ -7,7 +7,8 @@ Cancel / Close Now choice first.
 from __future__ import annotations
 
 from PySide6.QtCore import QTimer, Qt
-from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import (QDialog, QHBoxLayout, QLabel, QPushButton,
+                                QSlider, QVBoxLayout)
 
 from app.browser_control import close_all_browsers, running_browser_count
 from app.i18n import translator
@@ -15,9 +16,10 @@ from app.settings import settings
 
 
 class AzanNotificationDialog(QDialog):
-    def __init__(self, prayer_key: str, parent=None) -> None:
+    def __init__(self, prayer_key: str, scheduler=None, parent=None) -> None:
         super().__init__(parent)
         self._browsers_closed = False
+        self._scheduler = scheduler
 
         self.setWindowTitle(translator.t("azan_playing_title"))
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
@@ -54,6 +56,22 @@ class AzanNotificationDialog(QDialog):
         self.hadith_ref_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.hadith_ref_label)
 
+        if scheduler is not None:
+            volume_row = QHBoxLayout()
+            volume_row.addWidget(QLabel("🔉"))
+            self.volume_slider = QSlider(Qt.Orientation.Horizontal)
+            self.volume_slider.setRange(0, 100)
+            self.volume_slider.setValue(max(0, min(100, settings.azan_volume)))
+            self.volume_slider.valueChanged.connect(self._on_volume_changed)
+            volume_row.addWidget(self.volume_slider, 1)
+            volume_row.addWidget(QLabel("🔊"))
+            layout.addLayout(volume_row)
+
+            self.volume_hint_label = QLabel(translator.t("azan_volume_temp_hint"))
+            self.volume_hint_label.setObjectName("Muted")
+            self.volume_hint_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            layout.addWidget(self.volume_hint_label)
+
         btn_row = QHBoxLayout()
         self.minimize_btn = QPushButton(translator.t("minimize"))
         self.minimize_btn.setObjectName("Ghost")
@@ -85,6 +103,10 @@ class AzanNotificationDialog(QDialog):
             self._browser_timer.timeout.connect(self._tick_browser_countdown)
             self._browser_timer.start(1000)
             self._tick_browser_countdown(first=True)
+
+    def _on_volume_changed(self, value: int) -> None:
+        if self._scheduler is not None:
+            self._scheduler.set_live_volume(value)
 
     def _tick_browser_countdown(self, first: bool = False) -> None:
         if not first:

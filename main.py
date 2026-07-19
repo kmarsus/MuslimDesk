@@ -27,8 +27,9 @@ from app.ui.widgets.speed_overlay import SpeedOverlay
 from app.voice_clock import VoiceClock
 
 
-_ARABIC_FONT_FILES = ["Amiri-Regular.ttf", "ScheherazadeNew-Regular.ttf", "IndoPak.ttf", "Uthmanic.otf"]
-_BANGLA_FONT_FILES = ["HindSiliguri-Regular.ttf", "NotoSerifBengaliRegular.ttf"]
+_ARABIC_FONT_FILES = ["Amiri-Regular.ttf", "ScheherazadeNew-Regular.ttf", "IndoPak.ttf", "Uthmanic.otf",
+                       "AlQalamQuranMajeed.ttf"]
+_BANGLA_FONT_FILES = ["HindSiliguri-Regular.ttf", "NotoSerifBengaliRegular.ttf", "SolaimanLipi.ttf"]
 
 # Common Windows-installed fonts worth offering alongside the bundled Arabic
 # ones -- only added if actually present on this machine (QFontDatabase

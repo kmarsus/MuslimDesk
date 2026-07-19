@@ -58,7 +58,7 @@ class Settings:
 
     @property
     def arabic_font(self) -> str:
-        return self._get("arabic_font", "Amiri")
+        return self._get("arabic_font", "Al Majeed Quranic Font")
 
     @arabic_font.setter
     def arabic_font(self, v: str) -> None:
@@ -69,7 +69,7 @@ class Settings:
         """Font for the general interface text (menus, buttons, Bangla labels,
         etc.) -- separate from arabic_font, which only affects Quran/Azkar/Dua
         Arabic-script text."""
-        return self._get("ui_font", "System Default")
+        return self._get("ui_font", "SolaimanLipi")
 
     @ui_font.setter
     def ui_font(self, v: str) -> None:

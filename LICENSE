@@ -28,3 +28,8 @@ Bundled third-party content:
 - Fonts (Amiri, Scheherazade New, Noto Serif Bengali, Hind Siliguri, etc.):
   each under its own open-source license (SIL Open Font License / Apache),
   see assets/fonts/ for individual font licenses.
+- SolaimanLipi and Al Majeed Quranic Font (AlQalam): widely-distributed
+  freeware fonts commonly used in Bangla/Quranic software; bundled here
+  under the same terms they're freely distributed under. Their exact
+  redistribution license was not independently re-verified for this
+  project -- worth double-checking before wide public distribution.
